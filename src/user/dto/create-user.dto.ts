@@ -1,13 +1,20 @@
-import { User } from '../entities/user.entity';
 import {
   IsEmail,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
   MinLength,
+  IsUrl,
 } from 'class-validator';
 
-export class CreateUserDto extends User {
+export class CreateUserDto {
+  @IsString()
+  username: string;
+
+  @IsString()
+  name: string;
+
   @IsEmail()
   email: string;
 
@@ -19,6 +26,9 @@ export class CreateUserDto extends User {
   })
   password: string;
 
-  @IsString()
-  name: string;
+  //TODO: verify if image comes from our database
+  @IsUrl()
+  @IsOptional()
+  photo?: string;
+
 }
