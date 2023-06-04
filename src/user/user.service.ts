@@ -57,7 +57,7 @@ export class UserService {
 
   async update(userId, data: UpdateUserDto) {
     const userExists = await this.findId(userId);
-    if (!userExists){
+    if (!userExists) {
       throw new NotFoundException('User not found');
     }
 
@@ -67,5 +67,9 @@ export class UserService {
         id: userId,
       },
     });
+  }
+
+  async remove(id: string) {
+    await this.prisma.user.delete({ where: { id } });
   }
 }
