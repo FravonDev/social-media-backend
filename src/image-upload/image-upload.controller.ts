@@ -40,15 +40,8 @@ export class ImageUploadController {
       },
     }),
   )
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    if (!file) {
-      throw new BadRequestException();
-    } else {
-      const response = {
-        filePath: `http://localhost:3000/image/${file.filename}`,
-      };
-      return response;
-    }
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    await this.imageUploadService.uploadImage(file)
   }
 
   @IsPublic()
