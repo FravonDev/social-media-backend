@@ -1,21 +1,17 @@
 import {
   WebSocketGateway,
   SubscribeMessage,
-  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
   WebSocketServer,
-  WsException,
 } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
-import { Server, Socket } from 'socket.io';
-import { Chat } from './entities/chat.entity';
+import { Server } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import { WSAuthMiddleware } from './middlewares/ws-auth.middleware';
+import { AuthSocket, WSAuthMiddleware } from './middlewares/ws-auth.middleware';
+import { CreateMessageDto } from './dto/create-message.dto';
 
 @WebSocketGateway({
   cors: {
@@ -37,51 +33,44 @@ export class ChatGateway
     const middle = WSAuthMiddleware(this.jwtService, this.userService)
     server.use(middle)
     console.log('Chat gateway initialized');
-    setInterval(() => console.log(this.chatService.chats), 10000);
   }
 
-  async handleConnection(client: Socket, ...args: any[]) {
-    
-
+  async handleConnection(client: AuthSocket, ...args: any[]) {
+    this.chatService.saveRecipientSocketId(client.user.id, client.id);
+    await this.chatService.getUserMessages(client.user.id)
+    const data = this.chatService.chats;
+    this.server.emit('getPreviousMessages', data);
   }
-
-  handleDisconnect(client: Socket) {
+  
+  handleDisconnect(client: AuthSocket) {    
     console.log(`Disconnected: ${client.id}`);
+    this.chatService.removeRecipientSocketId(client.user.id);
+
   }
 
   @SubscribeMessage('sendMessage')
-  async handleSendMessage(client: Socket, payload: Chat): Promise<void> {
-    const { sender, recipient, text } = payload;
-    //TODO: save into db
-    await this.chatService.createMessage(payload);
-    
-    //TODO: send to recipient
-    this.server.to(recipient).emit('receiveMessage', payload);
-  }
+  async handleSendMessage( client: AuthSocket, payload: CreateMessageDto): Promise<void> {
 
-  @SubscribeMessage('getPreviousMessages')
-  async handleGetPreviousMessages(
-    client: Socket,
-    payload: { sender: string; recipient: string },
-  ): Promise<void> {
-    const { sender, recipient } = payload;
+    const { recipient, text } = payload;
 
-    const previousMessages = await this.chatService.getMessages(
-      sender,
+    //STEP 1: save on db
+    await this.chatService.createMessage({
+      sender: client.user.id,
       recipient,
-    );
-    console.log(previousMessages);
+      text,
+    });
     
-    // FIXME: Selecionar mensagens anteriores do banco de dados
-    // const previousMessages = await this.chatService.find({
-    //   where: [
-    //     { sender, recipient },
-    //     { sender: recipient, recipient: sender },
-    //   ],
-    //   order: { timestamp: 'ASC' },
-    // });
+    //STEP 2: verify if recipient is online and catch its socketid  send to related recipient sockeid
+    const recipientSocketId = this.chatService.getRecipientSocketId(recipient);
 
-    // Enviar as mensagens anteriores para o cliente
-    client.emit('previousMessages', previousMessages);
+    if (recipientSocketId) {
+      // IF Recipient is online, send the message directly to their socket
+      this.server.to(recipientSocketId).emit('receiveMessage', {
+        ...payload,
+        sender: client.user.id
+      });
+    } else {
+      // STEP 3: Recipient is offline, but message is saved on database
+    }
   }
 }
