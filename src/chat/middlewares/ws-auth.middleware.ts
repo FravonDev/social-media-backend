@@ -18,7 +18,7 @@ export const WSAuthMiddleware = (
   userService: UserService,
 ): SocketMiddleware => {
   return async (socket: AuthSocket, next: NextFunction) => {
-    try {
+    try {      
       const { access_token } = socket.handshake.query as {
         access_token: string;
       };
@@ -27,7 +27,7 @@ export const WSAuthMiddleware = (
       });
       const userResult = await userService.findByEmail(decodedToken.email);
       if (userResult) {
-        socket.user = userResult;
+        socket.user = {...userResult, password: undefined};
         next();
       } else {
         next({
