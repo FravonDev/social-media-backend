@@ -15,18 +15,14 @@ import { Server, Socket } from 'socket.io';
 import { Chat } from './entities/chat.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
-import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
-import { AllExceptionsFilter } from './exceptions/all-exceptions.filter';
-import { WebsocketExceptionsFilter } from './exceptions/ws-exception.filter';
+import { WSAuthMiddleware } from './middlewares/ws-auth.middleware';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
-@UseFilters(WebsocketExceptionsFilter)
-@UsePipes(new ValidationPipe({ transform: true }))export class ChatGateway
+export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   @WebSocketServer() server: Server;
@@ -38,48 +34,16 @@ import { WebsocketExceptionsFilter } from './exceptions/ws-exception.filter';
   ) {}
 
   afterInit(server: Server) {
+    const middle = WSAuthMiddleware(this.jwtService, this.userService)
+    server.use(middle)
     console.log('Chat gateway initialized');
-    setInterval(() => console.log(this.chatService.chats), 5000);
+    setInterval(() => console.log(this.chatService.chats), 10000);
   }
 
   async handleConnection(client: Socket, ...args: any[]) {
-    try {
-      const { access_token } = client.handshake.query as { access_token: string };
+    
 
-      const decodedToken = this.jwtService.verify(access_token, {
-        secret: process.env.JWT_SECRET,
-      });
-
-      const user = await this.userService.findByEmail(decodedToken.email);
-      if (!user) {
-        throw new Error('');
-      }
-      const currentUser = { ...user, password: undefined };
-      
-      client.data = {
-        currentUser,
-      };
-
-      const data = this.chatService.chats;
-      this.server.emit('getPreviousMessages', data);
-    } catch (error) {
-      if (error instanceof JsonWebTokenError){
-        throw new Error('Invalid access token')
-      }else if (error instanceof TokenExpiredError){
-        throw new Error('Access token expired');
-      }
-      client.disconnect();
-    }
   }
-
-
-
-
-
-
-
-
-
 
   handleDisconnect(client: Socket) {
     console.log(`Disconnected: ${client.id}`);
@@ -88,9 +52,9 @@ import { WebsocketExceptionsFilter } from './exceptions/ws-exception.filter';
   @SubscribeMessage('sendMessage')
   async handleSendMessage(client: Socket, payload: Chat): Promise<void> {
     const { sender, recipient, text } = payload;
-
     //TODO: save into db
     await this.chatService.createMessage(payload);
+    
     //TODO: send to recipient
     this.server.to(recipient).emit('receiveMessage', payload);
   }
@@ -106,6 +70,8 @@ import { WebsocketExceptionsFilter } from './exceptions/ws-exception.filter';
       sender,
       recipient,
     );
+    console.log(previousMessages);
+    
     // FIXME: Selecionar mensagens anteriores do banco de dados
     // const previousMessages = await this.chatService.find({
     //   where: [
