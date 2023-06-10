@@ -1,4 +1,4 @@
 export class CreateMessageDto {
-    recipient: string;
+    recipientId: string;
     text: string;
 }

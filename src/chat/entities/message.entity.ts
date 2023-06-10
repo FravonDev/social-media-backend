@@ -1,6 +1,7 @@
 export class Message {
-  sender: string;
-  recipient: string;
+  id: string;
+  senderId: string;
+  recipientId: string;
   text: string;
   sentAt: Date;
   readAt?: Date | null;

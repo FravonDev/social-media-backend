@@ -12,6 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { AuthSocket, WSAuthMiddleware } from './middlewares/ws-auth.middleware';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { v4 as uuid } from 'uuid';
 
 @WebSocketGateway({
   cors: {
@@ -37,44 +38,36 @@ export class ChatGateway
 
   async handleConnection(client: AuthSocket, ...args: any[]) {
     this.chatService.saveUserSocketId(client.user.id, client.id);
-    console.log(client.user.id);
     
     const data = await this.chatService.getUserMessages(client.user.id);
-    console.log(data);
-    
     
     this.server.to(client.id).emit('getPreviousMessages', data);
   }
   
-  handleDisconnect(client: AuthSocket) {    
+  handleDisconnect(client: AuthSocket) {
     console.log(`Disconnected: ${client.id}`);
     this.chatService.removeUserSocketId(client.user.id);
   }
 
   @SubscribeMessage('sendMessage')
   async handleSendMessage( client: AuthSocket, payload: CreateMessageDto): Promise<void> {
+    const { recipientId, text } = payload;
 
-    const { recipient, text } = payload;
-
-    //STEP 1: save on db
     await this.chatService.createMessage({
-      sender: client.user.id,
-      recipient,
+      id: uuid(),
+      senderId: client.user.id,
+      recipientId,
       text,
       sentAt: new Date()
     });
     
-    //STEP 2: verify if recipient is online and catch its socketid  send to related recipient sockeid
-    const recipientSocketId = this.chatService.getUserSocketId(recipient);
+    const recipientSocketId = this.chatService.getUserSocketId(recipientId);
 
     if (recipientSocketId) {
-      // IF Recipient is online, send the message directly to their socket
       this.server.to(recipientSocketId).emit('receiveMessage', {
         ...payload,
         sender: client.user.id
       });
-    } else {
-      // STEP 3: Recipient is offline, but message is saved on database
     }
   }
 }

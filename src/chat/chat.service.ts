@@ -8,22 +8,31 @@ export class ChatService {
   private userSocketMaps: Map<string, string>[] = [];
 
   async getUserMessages(userId: string): Promise<Message[]> {
-    return await this.prisma.message.findMany({
+    const messages = await this.prisma.message.findMany({
       where: {
         OR: [
-          { sender: userId },
-          { recipient: userId }]
+          { senderId: userId },
+          { recipientId: userId }]
       },
-      orderBy: { sentAt: 'asc' }
+      orderBy: {
+        sentAt: 'asc'
+      }
     })
+
+    return messages
   }
 
   async createMessage(payload: Message) {
-    await this.prisma.message.create({ data: payload});
+    try {
+      await this.prisma.message.create({ data: payload });
+    } catch (error) {
+      throw new Error('Recipient not found')
+    }
   }
 
   getUserSocketId(userId: string): string {
     const userSocketMap = this.userSocketMaps.find((map) => map.has(userId));
+
     if (!userSocketMap) {
       return null
     }
@@ -44,9 +53,11 @@ export class ChatService {
 
   removeUserSocketId(userId: string): void {
     const userMapIndex = this.userSocketMaps.findIndex((map) => map.has(userId));
+
     if (userMapIndex == -1) {
       throw new Error('Recipient not found')
     }
+
     this.userSocketMaps.splice(userMapIndex, 1);
   }
 }
