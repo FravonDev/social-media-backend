@@ -13,12 +13,16 @@ import { UserService } from 'src/user/user.service';
 import { AuthSocket, WSAuthMiddleware } from './middlewares/ws-auth.middleware';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { v4 as uuid } from 'uuid';
+import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import { WsCatchAllFilter } from './filters/ws-catch-all.filters';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
+@UseFilters(new WsCatchAllFilter())
+@UsePipes(new ValidationPipe())
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {

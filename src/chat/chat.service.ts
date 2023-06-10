@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Message } from './entities/message.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { WsException } from '@nestjs/websockets';
+import { WsBadRequestException } from './exceptions/ws-exceptions';
 
 @Injectable()
 export class ChatService {
@@ -26,7 +28,7 @@ export class ChatService {
     try {
       await this.prisma.message.create({ data: payload });
     } catch (error) {
-      throw new Error('Recipient not found')
+      throw new WsBadRequestException('Recipient not found')
     }
   }
 
@@ -55,7 +57,7 @@ export class ChatService {
     const userMapIndex = this.userSocketMaps.findIndex((map) => map.has(userId));
 
     if (userMapIndex == -1) {
-      throw new Error('Recipient not found')
+      throw new WsBadRequestException('Recipient not found')
     }
 
     this.userSocketMaps.splice(userMapIndex, 1);
