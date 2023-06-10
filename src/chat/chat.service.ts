@@ -1,53 +1,56 @@
 import { Injectable } from '@nestjs/common';
-import { Chat } from './entities/chat.entity';
+import { Message } from './entities/message.entity';
 
 @Injectable()
 export class ChatService {
 
-  chats: Chat[] = [];
-  private recipientSocketMaps: Map<string, string>[] = [];
+  messages: Message[] = [];
+  private userSocketMaps: Map<string, string>[] = [];
 
-  getUserMessages(userId: string) {
-    const data = this.chats.filter(
+  async getUserMessages(userId: string): Promise<Message[]> {
+    const data = await this.messages.filter(
       (item) =>
         (item.sender == userId) || (item.recipient == userId)
-        //TODO:order: { timestamp: 'ASC' },
+        //TODO: order: { timestamp: 'ASC' },
     );
+    console.log(userId);
+    console.log(data);
+    
     return data;
   }
 
-  async createMessage(payload: Chat) {
-    await this.chats.push(payload);
+  async createMessage(payload: Message) {
+    await this.messages.push(payload);
+    console.log(payload);
+    
   }
 
-  getRecipientSocketId(userId: string): string {
-    const recipientSocketMap = this.recipientSocketMaps.find((map) => map.has(userId));
+  getUserSocketId(userId: string): string {
+    const userSocketMap = this.userSocketMaps.find((map) => map.has(userId));
+    if (!userSocketMap){
+      return null
+    }
 
-    if (!recipientSocketMap) {
+    return userSocketMap.get(userId);
+  }
+
+  saveUserSocketId(userId: string, socketId: string): void {
+    let userSocketMap = this.userSocketMaps.find((map) => map.has(userId));
+
+    if (!userSocketMap) {
+      userSocketMap = new Map<string, string>();
+      this.userSocketMaps.push(userSocketMap);
+    }
+
+    userSocketMap.set(userId, socketId);
+  }
+
+  removeUserSocketId(userId: string): void {
+    const userMapIndex = this.userSocketMaps.findIndex((map) => map.has(userId));
+
+    if (userMapIndex == -1) {
       throw new Error('Recipient not found')
     }
-
-    return recipientSocketMap.get(userId);
-  }
-
-  saveRecipientSocketId(userId: string, socketId: string): void {
-    let recipientSocketMap = this.recipientSocketMaps.find((map) => map.has(userId));
-
-    if (!recipientSocketMap) {
-      recipientSocketMap = new Map<string, string>();
-      this.recipientSocketMaps.push(recipientSocketMap);
-    }
-
-    recipientSocketMap.set(userId, socketId);
-  }
-
-  removeRecipientSocketId(userId: string): void {
-    const recipientMapIndex = this.recipientSocketMaps.findIndex((map) => map.has(userId));
-
-    if (recipientMapIndex == -1) {
-      throw new Error('Recipient not found')
-    }
-    this.recipientSocketMaps.splice(recipientMapIndex, 1);
-
+    this.userSocketMaps.splice(userMapIndex, 1);
   }
 }
