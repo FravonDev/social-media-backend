@@ -21,3 +21,12 @@ model User {
   name     String
   photo    String?
 }
+
+model Message {
+  id        String    @id @default(uuid())
+  sender    String
+  recipient String
+  text      String
+  sentAt    DateTime
+  readAt    DateTime?
+}

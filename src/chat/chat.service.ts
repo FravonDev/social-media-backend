@@ -1,33 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { Message } from './entities/message.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ChatService {
-
-  messages: Message[] = [];
+  constructor(private readonly prisma: PrismaService) { }
   private userSocketMaps: Map<string, string>[] = [];
 
   async getUserMessages(userId: string): Promise<Message[]> {
-    const data = await this.messages.filter(
-      (item) =>
-        (item.sender == userId) || (item.recipient == userId)
-        //TODO: order: { timestamp: 'ASC' },
-    );
-    console.log(userId);
-    console.log(data);
-    
-    return data;
+    return await this.prisma.message.findMany({
+      where: {
+        OR: [
+          { sender: userId },
+          { recipient: userId }]
+      },
+      orderBy: { sentAt: 'asc' }
+    })
   }
 
   async createMessage(payload: Message) {
-    await this.messages.push(payload);
-    console.log(payload);
-    
+    await this.prisma.message.create({ data: payload});
   }
 
   getUserSocketId(userId: string): string {
     const userSocketMap = this.userSocketMaps.find((map) => map.has(userId));
-    if (!userSocketMap){
+    if (!userSocketMap) {
       return null
     }
 
@@ -47,7 +44,6 @@ export class ChatService {
 
   removeUserSocketId(userId: string): void {
     const userMapIndex = this.userSocketMaps.findIndex((map) => map.has(userId));
-
     if (userMapIndex == -1) {
       throw new Error('Recipient not found')
     }

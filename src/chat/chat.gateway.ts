@@ -37,7 +37,8 @@ export class ChatGateway
 
   async handleConnection(client: AuthSocket, ...args: any[]) {
     this.chatService.saveUserSocketId(client.user.id, client.id);
-    await this.chatService.getUserMessages(client.user.id)
+    console.log(client.user.id);
+    
     const data = await this.chatService.getUserMessages(client.user.id);
     console.log(data);
     
