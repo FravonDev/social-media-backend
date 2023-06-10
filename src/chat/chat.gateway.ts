@@ -36,16 +36,18 @@ export class ChatGateway
   }
 
   async handleConnection(client: AuthSocket, ...args: any[]) {
-    this.chatService.saveRecipientSocketId(client.user.id, client.id);
+    this.chatService.saveUserSocketId(client.user.id, client.id);
     await this.chatService.getUserMessages(client.user.id)
-    const data = this.chatService.chats;
-    this.server.emit('getPreviousMessages', data);
+    const data = await this.chatService.getUserMessages(client.user.id);
+    console.log(data);
+    
+    
+    this.server.to(client.id).emit('getPreviousMessages', data);
   }
   
   handleDisconnect(client: AuthSocket) {    
     console.log(`Disconnected: ${client.id}`);
-    this.chatService.removeRecipientSocketId(client.user.id);
-
+    this.chatService.removeUserSocketId(client.user.id);
   }
 
   @SubscribeMessage('sendMessage')
@@ -58,10 +60,11 @@ export class ChatGateway
       sender: client.user.id,
       recipient,
       text,
+      sentAt: new Date()
     });
     
     //STEP 2: verify if recipient is online and catch its socketid  send to related recipient sockeid
-    const recipientSocketId = this.chatService.getRecipientSocketId(recipient);
+    const recipientSocketId = this.chatService.getUserSocketId(recipient);
 
     if (recipientSocketId) {
       // IF Recipient is online, send the message directly to their socket
