@@ -58,7 +58,39 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## WebSockets
+
+### chat
+
+- **Authentication:** Client must send a valid `access_token` code in the header to connect to the server via WebSockets.
+
+### Events:
+
+- **getPreviousMessages (listen):** Client should listen for this event after establishing the connection. The server will send the previous messages.
+  <br/>
+
+- **sendMessage (emit):** Client can send messages using this event. Messages should have the following properties:
+    <br/>
+
+  - **`recipientId`**: ID of the user who will receive the message.
+  - **`text`**: Content of the message.
+
+    <br/>
+
+  Example payload:
+
+  ```json
+  {
+    "recipientId": "12345",
+    "text": "hello johnny"
+  }
+  ```
+
+    <br/>
+
+- **getMessage (listen):** The recipient of the message should listen to this event to receive the messages sent to them.
+
+    <br/>
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
