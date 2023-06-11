@@ -4,24 +4,33 @@ import { UserService } from './user.service';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @IsPublic()
-  @Post()
+  @ApiResponse({ status: 201, description: 'Created' })
+  @ApiOperation({ summary: 'Create user account' })
+  @Post('register')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
-  
-  @Patch()
-  update(@CurrentUser() currentUser, @Body() data: UpdateUserDto) {
+
+  @ApiBearerAuth()
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiOperation({ summary: 'Update user account' })
+  @Patch('update')
+  updateu(@CurrentUser() currentUser, @Body() data: UpdateUserDto) {
     return this.userService.update(currentUser.id, data);
   }
-
-  @Delete()
-  remove(@CurrentUser() currentUser){
+  
+  @ApiBearerAuth()
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiOperation({ summary: 'Delete user account' })
+  @Delete('delete')
+  remove(@CurrentUser() currentUser) {
     return this.userService.remove(currentUser.id);
   }
 }
