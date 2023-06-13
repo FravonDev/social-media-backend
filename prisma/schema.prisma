@@ -22,6 +22,17 @@ model User {
   photo            String?
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
+  following        Follow[]  @relation("Following")
+  followedBy       Follow[]  @relation("FollowedBy")
+}
+
+model Follow {
+  id         String   @id @default(uuid())
+  follower   User     @relation("Following", fields: [followerId], references: [id])
+  followerId String
+  followed   User     @relation("FollowedBy", fields: [followedId], references: [id])
+  followedId String
+  createdAt  DateTime
 }
 
 model Message {
