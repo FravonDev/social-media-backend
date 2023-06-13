@@ -1,105 +1,93 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <img src="https://github.com/FravonDev/social-media/assets/62142146/46b1c3c0-e413-4e49-99ed-9f27266fb336" width="200" alt="Social Media Logo" />
+</p>
+<br>
+<p align="center">
+<a href="./LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-success" alt="Mit License" /></a>
+<img src="https://img.shields.io/badge/status-building-blueviolet" alt="Status Building" />
+<img src="https://img.shields.io/badge/npm-v9.6.7-blue.svg" alt="NPM Version 9.6.7" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Social Media
+Welcome to the Social Media project! This is a custom social media platform developed using [Node](https://nodejs.org/) and [Nest](https://nestjs.com). this platform aims to provide a complete social media experience with features such as user registration, authentication, image hosting, real-time chat using WebSockets, and much more.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+##  Features 
 
-## Description
+- User registration and authentication 🔐
+- Image hosting system for users to share photos 📷
+- Real-time chat functionality using WebSockets 💬
+- Follow and Unfollow other users to stay updated with their activities 👥
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Installation 
+To get started with the project, follow these steps:
 
-## Installation
+
 
 ```bash
+#clone the project
+$ git clone https://github.com/FravonDev/social-media.git
+
+#install packages
 $ npm install
+
 ```
 
-## Running the app
+## Running the App
 
-```bash
-# development
-$ npm run start
+#### Development mode
+To run the project in development mode, use the following command:
 
-# watch mode
+```bash 
+# Run migrations
+$ npx prisma migrate dev
+
+#run server
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Test
 
-```bash
-# unit tests
-$ npm run test
+### Technologies Used
+The Social Media project utilizes the following technologies:
 
-# e2e tests
-$ npm run test:e2e
+- Node.js - JavaScript runtime
+- Nest - Progressive Node.js framework
+- Swagger - API documentation
+- WebSockets - Real-time communication protocol
 
-# test coverage
-$ npm run test:cov
-```
+## API Documentation
 
-## WebSockets
+To explore the API endpoints and their documentation, you should run the server and visit the [Swagger documentation](http://localhost:3000/api#/api-docs) page.
 
-### chat
+##  WebSockets
 
-- **Authentication:** Client must send a valid `access_token` code in the header to connect to the server via WebSockets.
+### Chat 
+
+- **Authentication:** Clients must send a valid `access_token` code in the header to connect to the server via WebSockets.
 
 ### Events:
 
-- **getPreviousMessages (listen):** Client should listen for this event after establishing the connection. The server will send the previous messages.
-  <br/>
+- **getPreviousMessages (listen):** Clients should listen for this event after establishing the connection. The server will send the previous messages.
 
-- **sendMessage (emit):** Client can send messages using this event. Messages should have the following properties:
-    <br/>
+- **sendMessage (emit):** Clients can send messages using this event. Messages should have the following properties:
 
   - **`recipientId`**: ID of the user who will receive the message.
   - **`text`**: Content of the message.
-
-    <br/>
 
   Example payload:
 
   ```json
   {
     "recipientId": "12345",
-    "text": "hello johnny"
+    "text": "Hello, Johnny! 👋"
   }
   ```
 
-    <br/>
-
 - **getMessage (listen):** The recipient of the message should listen to this event to receive the messages sent to them.
 
-    <br/>
+## Stay Connected
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Linkedin: [Flávio Adriano](https://www.linkedin.com/in/flavioadriano/)
+- GitHub Repository: [FravonDev](https://github.com/FravonDev)
 
 ## License
-
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the MIT License. See the [LICENCE](./LICENSE) file for more information. 📜 
