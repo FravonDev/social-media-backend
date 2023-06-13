@@ -22,16 +22,16 @@ model User {
   photo            String?
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
-  follows          Follow[]  @relation("Follows")
-  followers        Follow[]  @relation("Followers")
+  following        Follow[]  @relation("Following")
+  followedBy       Follow[]  @relation("FollowedBy")
 }
 
 model Follow {
   id         String   @id @default(uuid())
-  followed   User     @relation("Follows", fields: [followedId], references: [id])
-  followedId String
-  follower   User     @relation("Followers", fields: [followerId], references: [id])
+  follower   User     @relation("Following", fields: [followerId], references: [id])
   followerId String
+  followed   User     @relation("FollowedBy", fields: [followedId], references: [id])
+  followedId String
   createdAt  DateTime
 }
 

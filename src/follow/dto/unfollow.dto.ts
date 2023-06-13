@@ -5,6 +5,6 @@ import { ApiProperty } from '@nestjs/swagger';
 export class UnfollowDto {
     @IsNotEmpty()
     @IsString()
-    @ApiProperty({ description: 'ID of the user being unfollowed' })
+    @ApiProperty({ description: 'Username of the user being unfollowed' })
     username: string;
 }

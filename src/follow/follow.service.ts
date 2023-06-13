@@ -12,6 +12,7 @@ export class FollowService {
     private readonly prisma: PrismaService,
     private readonly userService: UserService
   ) { }
+
   async follow(createFollowDto: FollowDto, followerUsername: string) {
 
     const { username } = createFollowDto;
@@ -22,20 +23,11 @@ export class FollowService {
       throw new NotFoundException('User not found')
     }
 
-    const user = await this.prisma.user.findUnique({
-      where: {
-        username: followerUsername,
-      },
-      include: {
-        follows: {
-          include: {
-            followed: true,
-          },
-        },
-      },
-    });
-    if (user) {
-      throw new ConflictException('Follow already exists');
+    const alreadyFollowing = await this.prisma.follow.findFirst({ where: { followedId: userToFollow.id } })
+
+    if (alreadyFollowing) {
+      throw new ConflictException('Already following this user')
+
     }
 
     const data: Prisma.FollowCreateInput = {
@@ -51,23 +43,24 @@ export class FollowService {
   async unfollow(unfollowDto: UnfollowDto, userId: string) {
     const { username } = unfollowDto;
 
-    const user = await this.prisma.user.findUnique({
+    const userToUnfollow = await this.prisma.user.findUnique({
       where: {
         id: userId,
       },
       include: {
-        follows: {
+        following: {
           include: {
             followed: true,
           },
         },
       },
     });
-
-    if (!user) {
+    
+    if (!userToUnfollow) {
       throw new NotFoundException('User not found');
     }
-    const followToDelete = user.follows.find(follow => follow.followed.username === username);
+
+    const followToDelete = userToUnfollow.following.find(follow => follow.followed.username === username);
 
     if (!followToDelete) {
       throw new NotFoundException('Follow not found');
@@ -79,9 +72,6 @@ export class FollowService {
       },
     });
   }
-
-
-
 
   async findAllFollowers(username: string) {
     const userExists = await this.userService.findByUsername(username)
