@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="" width="200" alt="Social Media Logo" />
+  <img src="https://github.com/FravonDev/social-media/assets/62142146/46b1c3c0-e413-4e49-99ed-9f27266fb336" width="200" alt="Social Media Logo" />
 </p>
 <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
 <p align="center">
