@@ -1,10 +1,10 @@
 {
   "name": "social-media",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "1.0.0",
+  "description": "A social media, including user management, posts, comments, and real-time chat, and more.",
+  "author": "Flávio Adriano",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
