@@ -8,9 +8,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { ImageUploadModule } from './image-upload/image-upload.module';
 import { ChatModule } from './chat/chat.module';
+import { FollowModule } from './follow/follow.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, ImageUploadModule, ChatModule],
+  imports: [PrismaModule, UserModule, AuthModule, ImageUploadModule, ChatModule, FollowModule],
   controllers: [AppController],
   providers: [
     AppService,

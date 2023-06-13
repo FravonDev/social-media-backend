@@ -47,6 +47,14 @@ export class UserService {
     }
   }
 
+  async findByUsername(username: string) {
+    try {
+      return await this.prisma.user.findFirst({ where: { username } });
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
+
   async findId(userId: string) {
     try {
       return await this.prisma.user.findFirst({ where: { id: userId } });
