@@ -9,9 +9,10 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { ImageUploadModule } from './image-upload/image-upload.module';
 import { ChatModule } from './chat/chat.module';
 import { FollowModule } from './follow/follow.module';
+import { PostModule } from './post/post.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, ImageUploadModule, ChatModule, FollowModule],
+  imports: [PrismaModule, UserModule, AuthModule, ImageUploadModule, ChatModule, FollowModule, PostModule],
   controllers: [AppController],
   providers: [
     AppService,
