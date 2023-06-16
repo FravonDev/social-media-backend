@@ -1,8 +1,10 @@
 import {
     IsOptional,
     IsString,
-    IsUrl,
-    IsNotEmpty,
+    IsArray,
+    ArrayMaxSize,
+    Matches,
+
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -10,14 +12,14 @@ export class CreatePostDto {
     @IsString()
     @ApiProperty({ description: 'The text of the post' })
     @IsOptional()
-    @IsNotEmpty()
     text?: string;
 
-    @IsUrl()
-    @IsNotEmpty()
     @IsOptional()
-    @ApiProperty({
-        description: 'The url of images'
-    })
-    images?: string;
+    @ApiProperty({ description: 'The url of images' })
+    @IsArray()
+   
+    @Matches(/http:\/\/localhost:3000\/images/, { each: true, message: 'Each image must match http://localhost:3000/ ' })
+    @ArrayMaxSize(10)
+    images?: string[];
+
 }

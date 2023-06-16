@@ -13,6 +13,7 @@ export class PostController {
     if (!createPostDto.images && !createPostDto.text) {
       throw new MissingDataException()
     }
+    
     return this.postService.create(createPostDto);
   }
 

@@ -1,9 +1,9 @@
 export class Post {
     id: string;
     text?: string;
-    images?: string[];
-    created_at: Date;
-    updated_at: Date;
+    images: string[];
+    createdAt: Date;
+    updatedAt: Date;
     //TODO: 
     //likes
     //comments

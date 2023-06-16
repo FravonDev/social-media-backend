@@ -35,6 +35,14 @@ model Follow {
   createdAt  DateTime
 }
 
+model Post {
+  id        String    @id @default(uuid())
+  text      String?
+  images    String[]
+  createdAt DateTime
+  updatedAt DateTime?
+}
+
 model Message {
   id          String    @id @default(uuid())
   sender      User      @relation("SentMessages", fields: [senderId], references: [id])
