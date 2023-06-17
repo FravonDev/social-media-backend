@@ -4,6 +4,7 @@ export class Post {
     images: string[];
     createdAt: Date;
     updatedAt: Date;
+    authorId: string;
     //TODO: 
     //likes
     //comments
