@@ -24,6 +24,7 @@ model User {
   receivedMessages Message[] @relation("ReceivedMessages")
   following        Follow[]  @relation("Following")
   followedBy       Follow[]  @relation("FollowedBy")
+  Post             Post[]    @relation("Author")
 }
 
 model Follow {
@@ -33,6 +34,16 @@ model Follow {
   followed   User     @relation("FollowedBy", fields: [followedId], references: [id])
   followedId String
   createdAt  DateTime
+}
+
+model Post {
+  id        String    @id @default(uuid())
+  text      String?
+  images    String[]
+  author    User      @relation("Author", fields: [authorId], references: [id])
+  authorId  String
+  createdAt DateTime
+  updatedAt DateTime?
 }
 
 model Message {

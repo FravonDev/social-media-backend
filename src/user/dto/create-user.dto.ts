@@ -30,8 +30,6 @@ export class CreateUserDto {
   })
   name: string;
 
-
-
   @IsEmail()
   @ApiProperty({
     description: 'The email address'
