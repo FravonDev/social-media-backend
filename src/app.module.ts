@@ -10,9 +10,10 @@ import { ImageUploadModule } from './image-upload/image-upload.module';
 import { ChatModule } from './chat/chat.module';
 import { FollowModule } from './follow/follow.module';
 import { PostModule } from './post/post.module';
+import { LikeModule } from './like/like.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, ImageUploadModule, ChatModule, FollowModule, PostModule],
+  imports: [PrismaModule, UserModule, AuthModule, ImageUploadModule, ChatModule, FollowModule, PostModule, LikeModule],
   controllers: [AppController],
   providers: [
     AppService,
