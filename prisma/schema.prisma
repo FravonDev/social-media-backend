@@ -26,6 +26,7 @@ model User {
   followedBy       Follow[]  @relation("FollowedBy")
   Post             Post[]    @relation("Author")
   Like             Like[]    @relation("UserLikes")
+  Comment          Comment[] @relation("UserComment")
 }
 
 model Follow {
@@ -46,6 +47,7 @@ model Post {
   createdAt DateTime
   updatedAt DateTime?
   Like      Like[]    @relation("PostLikes")
+  Comment   Comment[] @relation("PostComment")
 }
 
 model Like {
@@ -55,6 +57,17 @@ model Like {
   post      Post     @relation("PostLikes", fields: [postId], references: [id])
   postId    String
   createdAt DateTime
+}
+
+model Comment {
+  id        String    @id @default(uuid())
+  text      String
+  user      User      @relation("UserComment", fields: [userId], references: [id])
+  userId    String
+  post      Post      @relation("PostComment", fields: [postId], references: [id])
+  postId    String
+  createdAt DateTime
+  updatedAt DateTime?
 }
 
 model Message {
