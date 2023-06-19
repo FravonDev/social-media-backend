@@ -49,7 +49,9 @@ export class CommentService {
   async findRelevantComments(postId: string, offset: number, limit: number) {
     const comments = await this.prisma.comment.findMany({
       where: { post: { id: postId } },
-      orderBy: { createdAt: 'asc' }
+      orderBy: { createdAt: 'asc' },
+      skip: offset,
+      take: limit
     }
     )
     return comments
