@@ -37,8 +37,8 @@ export class CommentService {
     const { commentId, text } = updateComment;
 
     await this.findbyid(commentId)
-
-    await this.prisma.comment.update({ data: { text }, where: { id: commentId } })
+    const updatedAt = new Date()
+    await this.prisma.comment.update({ data: { text, updatedAt }, where: { id: commentId } })
   }
 
   async remove(commentId: string) {
