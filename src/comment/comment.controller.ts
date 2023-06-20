@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { GetComment } from './dto/get-comment.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
@@ -16,6 +16,7 @@ export class CommentController {
   @ApiResponse({ status: 201, description: 'Created' })
   @ApiOperation({ summary: 'Create comment in a post' })
   @Post()
+  @HttpCode(HttpStatus.OK)
   create(@CurrentUser() user: User, @Body() createCommentDto: CreateCommentDto) {
     return this.commentService.create(user.id, createCommentDto);
   }
@@ -23,8 +24,8 @@ export class CommentController {
   @ApiBearerAuth()
   @ApiResponse({ status: 204, description: 'No Content' })
   @ApiOperation({ summary: 'Delete comment in a post' })
-  @HttpCode(204)
   @Patch()
+  @HttpCode(HttpStatus.NO_CONTENT)
   update(@Body() updateCommentDto: UpdateCommentDto) {
     return this.commentService.update(updateCommentDto);
   }
@@ -32,8 +33,8 @@ export class CommentController {
   @ApiBearerAuth()
   @ApiResponse({ status: 204, description: 'No Content' })
   @ApiOperation({ summary: 'Delete comment in a post' })
-  @HttpCode(204)
   @Delete()
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Body() deleteComment: DeleteCommentDto) {
     return this.commentService.remove(deleteComment.commentId);
   }
@@ -42,6 +43,7 @@ export class CommentController {
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiOperation({ summary: 'Get relevant Posts' })
   @Get()
+  @HttpCode(HttpStatus.OK)
   @HttpCode(200)  findComments(@Body() getComment: GetComment, @Query() commentPaginationParams: CommentPaginationParams) {
     const { offset, limit } = commentPaginationParams;
 
