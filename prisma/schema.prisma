@@ -28,8 +28,9 @@ model User {
   Post             Post[]        @relation("Author")
   Like             Like[]        @relation("UserLikes")
   Comment          Comment[]     @relation("UserComment")
-  Reply            Reply[]       @relation("UserReplies")
   CommentLike      CommentLike[] @relation("UserCommentLike")
+  Reply            Reply[]       @relation("UserReplies")
+  replyLike        ReplyLikes[]  @relation("UserReplyLikes")
 }
 
 model Follow {
@@ -85,14 +86,25 @@ model CommentLike {
 }
 
 model Reply {
-  id        String    @id @default(uuid())
-  text      String
-  user      User      @relation("UserReplies", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id         String       @id @default(uuid())
+  text       String
+  user       User         @relation("UserReplies", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId     String
+  comment    Comment      @relation("CommentReplies", fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  commentId  String
+  replyLikes ReplyLikes[] @relation("ReplyLike")
+  createdAt  DateTime
+  updatedAt  DateTime?
+}
+
+model ReplyLikes {
+  id        String   @id @default(uuid())
+  user      User     @relation("UserReplyLikes", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String
-  comment   Comment   @relation("CommentReplies", fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  commentId String
+  Reply     Reply    @relation("ReplyLike", fields: [replyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  replyId   String
+  postId    String
   createdAt DateTime
-  updatedAt DateTime?
 }
 
 model Message {
