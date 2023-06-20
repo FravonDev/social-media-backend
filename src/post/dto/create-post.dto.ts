@@ -17,7 +17,6 @@ export class CreatePostDto {
     @IsOptional()
     @ApiProperty({ description: 'The url of images' })
     @IsArray()
-   
     @Matches(/http:\/\/localhost:3000\/images/, { each: true, message: 'Each image must match http://localhost:3000/images ' })
     @ArrayMaxSize(10)
     images?: string[];

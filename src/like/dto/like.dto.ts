@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsUUID } from "class-validator";
+import { IsNotEmpty, IsUUID } from "class-validator";
 
 export class CreateLikeDto {
     @ApiProperty({ description: 'Post ID' })
-    @IsString()
+    @IsUUID()
+    @IsNotEmpty()
     postId: string;
 }

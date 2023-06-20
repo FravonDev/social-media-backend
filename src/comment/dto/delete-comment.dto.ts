@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsUUID } from "class-validator";
 
 export class DeleteCommentDto {
     @ApiProperty({ description: 'comment ID' })
-    @IsString()
+    @IsUUID()
     @IsNotEmpty()
     commentId: string;
 }

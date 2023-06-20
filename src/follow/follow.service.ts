@@ -17,17 +17,12 @@ export class FollowService {
 
     const { username } = createFollowDto;
 
-    const userToFollow = await this.userService.findByUsername(username)
-
-    if (!userToFollow) {
-      throw new NotFoundException('User not found')
-    }
+    const userToFollow = await this.findByUsername(username);
 
     const alreadyFollowing = await this.prisma.follow.findFirst({ where: { followedId: userToFollow.id } })
 
     if (alreadyFollowing) {
       throw new ConflictException('Already following this user')
-
     }
 
     const data: Prisma.FollowCreateInput = {
@@ -38,6 +33,14 @@ export class FollowService {
     };
 
     await this.prisma.follow.create({ data })
+  }
+  async findByUsername(username: string) {
+    const userExists = await this.userService.findByUsername(username)
+
+    if (!userExists) {
+      throw new NotFoundException('User not found')
+    }
+    return userExists
   }
 
   async unfollow(unfollowDto: UnfollowDto, userId: string) {
@@ -55,7 +58,7 @@ export class FollowService {
         },
       },
     });
-    
+
     if (!userToUnfollow) {
       throw new NotFoundException('User not found');
     }
@@ -74,11 +77,7 @@ export class FollowService {
   }
 
   async findAllFollowers(username: string) {
-    const userExists = await this.userService.findByUsername(username)
-
-    if (!userExists) {
-      throw new NotFoundException('User not found')
-    }
+    await this.findByUsername(username);
 
     const followers = await this.prisma.follow.findMany({
       where: { followed: { username: username } }
@@ -87,11 +86,7 @@ export class FollowService {
   }
 
   async findAllFollowing(username: string) {
-    const userExists = await this.userService.findByUsername(username)
-
-    if (!userExists) {
-      throw new NotFoundException('User not found')
-    }
+    await this.findByUsername(username);
 
     const followers = await this.prisma.follow.findMany({
       where: { follower: { username: username } }
