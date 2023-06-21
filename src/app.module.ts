@@ -12,9 +12,12 @@ import { FollowModule } from './follow/follow.module';
 import { PostModule } from './post/post.module';
 import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
+import { CommentLikeModule } from './comment-like/comment-like.module';
+import { ReplyModule } from './reply/reply.module';
+import { ReplyLikeModule } from './reply-like/reply-like.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, ImageUploadModule, ChatModule, FollowModule, PostModule, LikeModule, CommentModule],
+  imports: [PrismaModule, UserModule, AuthModule, ImageUploadModule, ChatModule, FollowModule, PostModule, LikeModule, CommentModule, CommentLikeModule, ReplyModule, ReplyLikeModule],
   controllers: [AppController],
   providers: [
     AppService,

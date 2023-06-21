@@ -27,7 +27,6 @@ export class CommentService {
         connect: { id: postId },
       },
       createdAt: new Date(),
-
     };
 
     await this.prisma.comment.create({ data })
