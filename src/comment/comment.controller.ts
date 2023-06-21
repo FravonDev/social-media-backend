@@ -23,7 +23,7 @@ export class CommentController {
 
   @ApiBearerAuth()
   @ApiResponse({ status: 204, description: 'No Content' })
-  @ApiOperation({ summary: 'Delete comment in a post' })
+  @ApiOperation({ summary: 'Update comment in a post' })
   @Patch()
   @HttpCode(HttpStatus.NO_CONTENT)
   update(@Body() updateCommentDto: UpdateCommentDto) {
@@ -41,7 +41,7 @@ export class CommentController {
 
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'OK' })
-  @ApiOperation({ summary: 'Get relevant Posts' })
+  @ApiOperation({ summary: 'Get relevant Comments' })
   @Get()
   @HttpCode(HttpStatus.OK)
   @HttpCode(200)  findComments(@Body() getComment: GetComment, @Query() commentPaginationParams: CommentPaginationParams) {
@@ -49,6 +49,5 @@ export class CommentController {
 
     return this.commentService.findRelevantComments(getComment.postId, offset, limit);
   }
-
 
 }
