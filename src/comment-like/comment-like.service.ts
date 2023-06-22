@@ -16,7 +16,7 @@ export class CommentLikeService {
     const { commentId } = likeComment;
     await this.commentService.findbyid(commentId)
 
-    const alreadyLiked = await this.prisma.commentLike.findFirst({
+    const alreadyLiked = await this.prisma.like.findFirst({
       where: {
         user: { id: userId },
         comment: { id: commentId }
@@ -27,7 +27,7 @@ export class CommentLikeService {
       throw new ConflictException("You already like this comment")
     }
 
-    const data: Prisma.CommentLikeCreateInput = {
+    const data: Prisma.LikeCreateInput = {
       id: uuid(),
       createdAt: new Date(),
       user: {
@@ -38,7 +38,7 @@ export class CommentLikeService {
       }
     };
 
-    await this.prisma.commentLike.create({ data })
+    await this.prisma.like.create({ data })
   }
 
 
@@ -46,7 +46,7 @@ export class CommentLikeService {
     const { commentId } = unlikeComment;
 
     await this.commentService.findbyid(commentId)
-    const like = await this.prisma.commentLike.findFirst({
+    const like = await this.prisma.like.findFirst({
       where: {
         user: { id: userId },
         comment: { id: commentId }
@@ -55,6 +55,6 @@ export class CommentLikeService {
     if (!like) {
       throw new NotFoundException("Like not found")
     }
-    await this.prisma.commentLike.delete({ where: { id: like.id} })
+    await this.prisma.like.delete({ where: { id: like.id} })
   }
 }

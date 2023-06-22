@@ -12,30 +12,30 @@ export class ReplyLikeService {
   async like(userId: string, replyLike: ReplyLikeDto) {
     const { replyId } = replyLike
 
-    const alreadyLiked = await this.prisma.replyLike.findFirst({
+    const alreadyLiked = await this.prisma.like.findFirst({
       where: {
         user: { id: userId },
         reply: { id: replyId }
       }
     })
     if (alreadyLiked) {      
-      throw new ConflictException("You already like this reply")
+      throw new ConflictException("You already liked this reply")
     }
 
-    const data: Prisma.ReplyLikeCreateInput = {
+    const data: Prisma.LikeCreateInput = {
       id: uuid(),
       reply: { connect: { id: replyId} },
       user: { connect: {id: userId} },
       createdAt: new Date()
     }
     
-    await this.prisma.replyLike.create({ data })
+    await this.prisma.like.create({ data })
   }
 
   async unlike(userId: string, UnlikeReply: ReplyUnlikeDto) {
     const { replyId } = UnlikeReply
     
-    const like = await this.prisma.replyLike.findFirst({
+    const like = await this.prisma.like.findFirst({
       where: {
         user: { id: userId },
         reply: { id: replyId }
@@ -46,7 +46,7 @@ export class ReplyLikeService {
       throw new NotFoundException("Reply Like not found")
     }
     
-    await this.prisma.replyLike.delete({ where: {id: like.id }})
+    await this.prisma.like.delete({ where: {id: like.id }})
   }
 
 }

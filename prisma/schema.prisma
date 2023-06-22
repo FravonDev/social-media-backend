@@ -15,22 +15,20 @@ generator client {
 }
 
 model User {
-  id               String        @id @default(uuid())
-  email            String        @unique
-  username         String        @unique
+  id               String    @id @default(uuid())
+  email            String    @unique
+  username         String    @unique
   password         String
   name             String
   photo            String?
-  sentMessages     Message[]     @relation("SentMessages")
-  receivedMessages Message[]     @relation("ReceivedMessages")
-  following        Follow[]      @relation("Following")
-  followedBy       Follow[]      @relation("FollowedBy")
-  Post             Post[]        @relation("Author")
-  Like             Like[]        @relation("UserLikes")
-  Comment          Comment[]     @relation("UserComment")
-  CommentLike      CommentLike[] @relation("UserCommentLike")
-  Reply            Reply[]       @relation("UserReplies")
-  replyLike        ReplyLike[]   @relation("UserReplyLikes")
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  following        Follow[]  @relation("Following")
+  followedBy       Follow[]  @relation("FollowedBy")
+  Post             Post[]    @relation("Author")
+  Comment          Comment[] @relation("UserComment")
+  Reply            Reply[]   @relation("UserReplies")
+  Like             Like[]    @relation("UserLike")
 }
 
 model Follow {
@@ -50,59 +48,45 @@ model Post {
   authorId  String
   createdAt DateTime
   updatedAt DateTime?
-  Like      Like[]    @relation("PostLikes")
+  Like      Like[]    @relation("PostLike")
   Comment   Comment[] @relation("PostComment")
 }
 
-model Like {
-  id        String   @id @default(uuid())
-  user      User     @relation("UserLikes", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+model Comment {
+  id        String    @id @default(uuid())
+  text      String
+  user      User      @relation("UserComment", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String
-  post      Post     @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  post      Post      @relation("PostComment", fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   postId    String
   createdAt DateTime
-}
-
-model Comment {
-  id          String        @id @default(uuid())
-  text        String
-  user        User          @relation("UserComment", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId      String
-  post        Post          @relation("PostComment", fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  postId      String
-  createdAt   DateTime
-  updatedAt   DateTime?
-  Reply       Reply[]       @relation("CommentReplies")
-  CommentLike CommentLike[] @relation("CommentLike")
-}
-
-model CommentLike {
-  id        String   @id @default(uuid())
-  user      User     @relation("UserCommentLike", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
-  comment   Comment  @relation("CommentLike", fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  commentId String
-  createdAt DateTime
+  updatedAt DateTime?
+  Reply     Reply[]   @relation("CommentReplies")
+  Likes     Like[]    @relation("CommentLike")
 }
 
 model Reply {
-  id         String      @id @default(uuid())
+  id         String    @id @default(uuid())
   text       String
-  user       User        @relation("UserReplies", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user       User      @relation("UserReplies", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId     String
-  comment    Comment     @relation("CommentReplies", fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  comment    Comment   @relation("CommentReplies", fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   commentId  String
-  replyLikes ReplyLike[] @relation("ReplyLike")
+  replyLikes Like[]    @relation("ReplyLike")
   createdAt  DateTime
   updatedAt  DateTime?
 }
 
-model ReplyLike {
+model Like {
   id        String   @id @default(uuid())
-  user      User     @relation("UserReplyLikes", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user      User     @relation("UserLike", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String
-  reply     Reply    @relation("ReplyLike", fields: [replyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  replyId   String
+  post      Post?    @relation("PostLike", fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId    String?
+  comment   Comment? @relation("CommentLike", fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  commentId String?
+  reply     Reply?   @relation("ReplyLike", fields: [replyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  replyId   String?
   createdAt DateTime
 }
 
