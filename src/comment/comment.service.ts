@@ -1,10 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 as uuid } from 'uuid'
 import { Prisma } from '@prisma/client';
 import { PostService } from 'src/post/post.service';
+import { CommentLikeDto } from './dto/comment-like.dto';
+import { CommentUnlikeDto } from './dto/comment-unlike.dto';
 
 @Injectable()
 export class CommentService {
@@ -43,6 +45,51 @@ export class CommentService {
   async remove(commentId: string) {
     await this.findbyid(commentId)
     await this.prisma.comment.delete({ where: { id: commentId } })
+  }
+
+  async like(userId: string, likeComment: CommentLikeDto) {
+    const { commentId } = likeComment;
+    await this.findbyid(commentId)
+
+    const alreadyLiked = await this.prisma.like.findFirst({
+      where: {
+        user: { id: userId },
+        comment: { id: commentId }
+      }
+    })
+
+    if (alreadyLiked) {
+      throw new ConflictException("You already like this comment")
+    }
+
+    const data: Prisma.LikeCreateInput = {
+      id: uuid(),
+      createdAt: new Date(),
+      user: {
+        connect: { id: userId },
+      },
+      comment: {
+        connect: { id: commentId }
+      }
+    };
+
+    await this.prisma.like.create({ data })
+  }
+
+  async unlike(userId: string, unlikeComment: CommentUnlikeDto) {
+    const { commentId } = unlikeComment;
+
+    await this.findbyid(commentId)
+    const like = await this.prisma.like.findFirst({
+      where: {
+        user: { id: userId },
+        comment: { id: commentId }
+      }
+    })
+    if (!like) {
+      throw new NotFoundException("Like not found")
+    }
+    await this.prisma.like.delete({ where: { id: like.id} })
   }
 
   async findRelevantComments(postId: string, offset: number, limit: number) {

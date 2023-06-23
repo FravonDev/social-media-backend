@@ -102,11 +102,9 @@ export class PostService {
         post: { id: postId }
       }
     })
-
     if (!like) {
       throw new NotFoundException("Like not found")
     }
-
     await this.prisma.like.delete({ where: { id: like.id } });
   }
 
