@@ -1,27 +1,17 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-  Res,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ImageUploadService } from './image-upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express, Response } from 'express';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
-import { diskStorage } from 'multer';
-import { v4 as uuid } from 'uuid';
-import * as fs from 'fs';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from '@prisma/client';
+import { uploadOptions } from './config/upload-image.config';
 
 @Controller('image')
 export class ImageUploadController {
-  constructor(private readonly imageUploadService: ImageUploadService) {}
-  @IsPublic()
+  constructor(private readonly imageUploadService: ImageUploadService) { }
+
   @Post('upload')
   @ApiOperation({ summary: 'Upload image' })
   @ApiResponse({ status: 201, description: 'Created' })
@@ -34,25 +24,10 @@ export class ImageUploadController {
     }
   })
   @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const fileExtension = file.originalname.split(`.`)[1];
-          const newFileName = uuid() + '.' + fileExtension;
-          cb(null, newFileName);
-        },
-      }),
-      fileFilter: (req, file, callback) => {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-          return callback(null, false);
-        }
-        callback(null, true);
-      },
-    }),
+    FileInterceptor('file', uploadOptions),
   )
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    await this.imageUploadService.uploadImage(file)
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @CurrentUser() user: User,) {
+    return await this.imageUploadService.uploadImage(file, user.id);
   }
 
   @IsPublic()
@@ -60,10 +35,14 @@ export class ImageUploadController {
   @ApiOperation({ summary: 'Get image' })
   @Get('/:filename')
   async getPicture(@Param('filename') filename, @Res() res: Response) {
-    const filePath = `./uploads/${filename}`;
-    if (!fs.existsSync(filePath)) {
-      throw new NotFoundException('image not found.');
+    const image = await this.imageUploadService.getImageById(filename);
+
+    if (!image) {
+      throw new NotFoundException('Image not found.');
     }
-    res.sendFile(filename, { root: './uploads' });
+
+    res.setHeader('Content-Type', image.contentType);
+
+    res.send(image.data);
   }
 }
