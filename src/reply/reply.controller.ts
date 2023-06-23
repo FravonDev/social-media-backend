@@ -8,6 +8,8 @@ import { ReplyPaginationParams } from './dto/reply-pagination.dto';
 import { DeleteReplyDto } from './dto/delete-reply.dto';
 import { UpdateReplyDto } from './dto/update-reply.dto';
 import { GetReplies } from './dto/get-replies.dto';
+import { ReplyLikeDto } from './dto/reply-like.dto';
+import { ReplyUnlikeDto } from './dto/reply-unlike.dto';
 
 @Controller('reply')
 export class ReplyController {
@@ -50,6 +52,24 @@ export class ReplyController {
     const { offset, limit } = replyPaginationParams;
 
     return this.replyService.findReplies(getReply.commentId, offset, limit);
+  }
+
+  @ApiBearerAuth()
+  @ApiResponse({ status: 201, description: 'Created' })
+  @ApiOperation({ summary: 'Like a reply' })
+  @Post('like')
+  @HttpCode(HttpStatus.CREATED)
+  createLike(@CurrentUser() user: User, @Body() likeCommentDto: ReplyLikeDto ) {
+    return this.replyService.like(user.id, likeCommentDto);
+  }
+
+  @ApiBearerAuth()
+  @ApiResponse({ status: 204, description: 'No Content' })
+  @ApiOperation({ summary: 'Unlike a reply' })
+  @Delete('unlike')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  removeLike(@CurrentUser() user: User, @Body() unlikeReplyDto: ReplyUnlikeDto) {
+    return this.replyService.unlike(user.id, unlikeReplyDto);
   }
 
 }
