@@ -25,6 +25,7 @@ model User {
   receivedMessages Message[] @relation("ReceivedMessages")
   following        Follow[]  @relation("Following")
   followedBy       Follow[]  @relation("FollowedBy")
+  images           Image[]   @relation("UserImages")
   Post             Post[]    @relation("Author")
   Comment          Comment[] @relation("UserComment")
   Reply            Reply[]   @relation("UserReplies")
@@ -38,6 +39,15 @@ model Follow {
   followed   User     @relation("FollowedBy", fields: [followedId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   followedId String
   createdAt  DateTime
+}
+
+model Image {
+  id           String @id @default(uuid())
+  filename     String
+  contentType  String
+  data         Bytes
+  uploadedBy   User   @relation("UserImages", fields: [uploadedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  uploadedById String
 }
 
 model Post {
