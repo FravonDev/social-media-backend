@@ -12,7 +12,6 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { AuthSocket, WSAuthMiddleware } from './middlewares/ws-auth.middleware';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { v4 as uuid } from 'uuid';
 import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WsCatchAllFilter } from './filters/ws-catch-all.filters';
 import { TypingDto } from './dto/typing-message.dto';
@@ -59,13 +58,7 @@ export class ChatGateway
   async handleSendMessage(client: AuthSocket, payload: CreateMessageDto): Promise<void> {
     const { recipientId, text } = payload;
 
-    await this.chatService.createMessage({
-      id: uuid(),
-      senderId: client.user.id,
-      recipientId,
-      text,
-      sentAt: new Date()
-    });
+    await this.chatService.createMessage(client.user.id, payload);
 
     const recipientSocketId = this.chatService.getUserSocketId(recipientId);
 
@@ -76,6 +69,7 @@ export class ChatGateway
       });
     }
   }
+
   @SubscribeMessage('typing')
   async typing(client: AuthSocket, payload: TypingDto) {
     const { recipientId } = payload
@@ -86,4 +80,5 @@ export class ChatGateway
       this.server.to(recipientSocketId).emit('isTyping', true);
     }
   }
+
 }

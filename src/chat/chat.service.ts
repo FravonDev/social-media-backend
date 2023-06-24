@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Message } from './entities/message.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { WsException } from '@nestjs/websockets';
 import { WsBadRequestException } from './exceptions/ws-exceptions';
+import { Prisma } from '@prisma/client';
+import { v4 as uuid } from 'uuid'
+import { CreateMessageDto } from './dto/create-message.dto';
 
 @Injectable()
 export class ChatService {
+
   constructor(private readonly prisma: PrismaService) { }
   private userSocketMaps: Map<string, string>[] = [];
 
@@ -24,9 +27,17 @@ export class ChatService {
     return messages
   }
 
-  async createMessage(payload: Message) {
+  async createMessage(senderId: string, payload: CreateMessageDto) {
     try {
-      await this.prisma.message.create({ data: payload });
+      const { recipientId, text } = payload
+      const data: Prisma.MessageCreateInput = {
+        id: uuid(),
+        sender: { connect: { id: senderId } },
+        recipient: { connect: { id: recipientId } },
+        text,
+        sentAt: new Date()
+      }
+      await this.prisma.message.create({ data });
     } catch (error) {
       throw new WsBadRequestException('Recipient not found')
     }
