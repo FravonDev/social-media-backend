@@ -23,23 +23,37 @@ export class ChatService {
         sentAt: 'asc'
       }
     })
-
     return messages
   }
 
-  async getChatMessages(userId: string, payload: GetChatMessagesDto): Promise<Message[]> {
+  async getChatMessages(userId: string, payload: GetChatMessagesDto): Promise<any> {
     const { recipientId } = payload;
+
+    const currentTimestamp = new Date();
+
+    await this.prisma.message.updateMany({
+      where: {
+        recipientId: { contains: userId },
+        senderId: { contains: recipientId},
+        readAt: null
+      },
+      data: {
+        readAt: currentTimestamp,
+      },
+    });
+
     const messages = await this.prisma.message.findMany({
       where: {
         OR: [
           { senderId: userId, recipientId: recipientId },
-          { recipientId: userId, senderId: recipientId }]
+          { recipientId: userId, senderId: recipientId }
+        ]
       },
       orderBy: {
         sentAt: 'asc'
       }
     })
-    
+
     return messages
   }
 
@@ -120,6 +134,7 @@ export class ChatService {
 
     return Array.from(uniqueChats.values());
   }
+
   getChatKey(message: Message): string {
     const { senderId, recipientId } = message;
     const sortedIds = [senderId, recipientId].sort();
