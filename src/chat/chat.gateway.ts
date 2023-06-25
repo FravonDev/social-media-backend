@@ -56,9 +56,9 @@ export class ChatGateway
   }
 
   @SubscribeMessage('getChatMessages')
-  async getfChatMessages(client: AuthSocket, payload: GetChatMessagesDto){
+  async getfChatMessages(client: AuthSocket, payload: GetChatMessagesDto) {
     const data = await this.chatService.getChatMessages(client.user.id, payload);
-    
+
     this.server.to(client.id).emit('receiveChatMessages', data);
   }
 
@@ -85,7 +85,7 @@ export class ChatGateway
     const recipientSocketId = this.chatService.getUserSocketId(recipientId);
 
     if (recipientSocketId) {
-      this.server.to(recipientSocketId).emit('isTyping', true);
+      this.server.to(recipientSocketId).emit('isTyping', { senderid: client.user.id, typing: true });
     }
   }
 
