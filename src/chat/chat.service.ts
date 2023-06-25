@@ -27,7 +27,7 @@ export class ChatService {
   }
 
   async getChatMessages(userId: string, payload: GetChatMessagesDto): Promise<any> {
-    const { recipientId } = payload;
+    const { recipientId, offset, limit } = payload;
 
     const currentTimestamp = new Date();
 
@@ -51,7 +51,9 @@ export class ChatService {
       },
       orderBy: {
         sentAt: 'asc'
-      }
+      },
+      skip: offset,
+      take: limit
     })
 
     return messages
