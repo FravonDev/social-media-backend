@@ -4,6 +4,7 @@ import { WsBadRequestException } from './exceptions/ws-exceptions';
 import { Prisma, Message as Message } from '@prisma/client';
 import { v4 as uuid } from 'uuid'
 import { CreateMessageDto } from './dto/create-message.dto';
+import { GetChatMessagesDto } from './dto/get-chat-messages.dto';
 
 @Injectable()
 export class ChatService {
@@ -26,18 +27,19 @@ export class ChatService {
     return messages
   }
 
-  async getChatMessages(userId: string): Promise<Message[]> {
+  async getChatMessages(userId: string, payload: GetChatMessagesDto): Promise<Message[]> {
+    const { recipientId } = payload;
     const messages = await this.prisma.message.findMany({
       where: {
         OR: [
-          { senderId: userId },
-          { recipientId: userId }]
+          { senderId: userId, recipientId: recipientId },
+          { recipientId: userId, senderId: recipientId }]
       },
       orderBy: {
         sentAt: 'asc'
       }
     })
-
+    
     return messages
   }
 

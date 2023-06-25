@@ -15,6 +15,7 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WsCatchAllFilter } from './filters/ws-catch-all.filters';
 import { TypingDto } from './dto/typing-message.dto';
+import { GetChatMessagesDto } from './dto/get-chat-messages.dto';
 
 @WebSocketGateway({
   cors: {
@@ -54,9 +55,16 @@ export class ChatGateway
     this.chatService.removeUserSocketId(client.user.id);
   }
 
+  @SubscribeMessage('getChatMessages')
+  async getfChatMessages(client: AuthSocket, payload: GetChatMessagesDto){
+    const data = await this.chatService.getChatMessages(client.user.id, payload);
+    
+    this.server.to(client.id).emit('receiveChatMessages', data);
+  }
+
   @SubscribeMessage('sendMessage')
   async handleSendMessage(client: AuthSocket, payload: CreateMessageDto): Promise<void> {
-    const { recipientId, text } = payload;
+    const { recipientId } = payload;
 
     await this.chatService.createMessage(client.user.id, payload);
 
