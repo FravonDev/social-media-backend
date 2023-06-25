@@ -45,7 +45,7 @@ export class ChatGateway
   async handleConnection(client: AuthSocket, ...args: any[]) {
     this.chatService.saveUserSocketId(client.user.id, client.id);
 
-    const data = await this.chatService.getUserMessages(client.user.id);
+    const data = await this.chatService.getUserMessagePreviews(client.user.id);
 
     this.server.to(client.id).emit('getPreviousMessages', data);
   }
