@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from './entities/message.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { WsException } from '@nestjs/websockets';
 import { WsBadRequestException } from './exceptions/ws-exceptions';
+import { Prisma, Message as Message } from '@prisma/client';
+import { v4 as uuid } from 'uuid'
+import { CreateMessageDto } from './dto/create-message.dto';
+import { GetChatMessagesDto } from './dto/get-chat-messages.dto';
 
 @Injectable()
 export class ChatService {
+
   constructor(private readonly prisma: PrismaService) { }
   private userSocketMaps: Map<string, string>[] = [];
 
@@ -20,13 +23,66 @@ export class ChatService {
         sentAt: 'asc'
       }
     })
+    return messages
+  }
+
+  async getChatMessages(userId: string, payload: GetChatMessagesDto): Promise<any> {
+    const { recipientId, offset, limit } = payload;
+
+    const currentTimestamp = new Date();
+
+    await this.prisma.message.updateMany({
+      where: {
+        recipientId: { contains: userId },
+        senderId: { contains: recipientId},
+        readAt: null
+      },
+      data: {
+        readAt: currentTimestamp,
+      },
+    });
+
+    const messages = await this.prisma.message.findMany({
+      where: {
+        OR: [
+          { senderId: userId, recipientId: recipientId },
+          { recipientId: userId, senderId: recipientId }
+        ]
+      },
+      orderBy: {
+        sentAt: 'asc'
+      },
+      skip: offset,
+      take: limit
+    })
 
     return messages
   }
 
-  async createMessage(payload: Message) {
+  async getUserMessagePreviews(userId: string): Promise<any> {
+    const queryResult: Message[] = await this.prisma.message.findMany({
+      where: {
+        OR: [{ senderId: userId }, { recipientId: userId }],
+      },
+      orderBy: { sentAt: 'desc' },
+      distinct: ['senderId', 'recipientId'],
+    });
+
+    const messages = this.removeDuplicatedChat(queryResult)
+    return messages;
+  }
+
+  async createMessage(senderId: string, payload: CreateMessageDto) {
     try {
-      await this.prisma.message.create({ data: payload });
+      const { recipientId, text } = payload
+      const data: Prisma.MessageCreateInput = {
+        id: uuid(),
+        sender: { connect: { id: senderId } },
+        recipient: { connect: { id: recipientId } },
+        text,
+        sentAt: new Date()
+      }
+      await this.prisma.message.create({ data });
     } catch (error) {
       throw new WsBadRequestException('Recipient not found')
     }
@@ -61,5 +117,29 @@ export class ChatService {
     }
 
     this.userSocketMaps.splice(userMapIndex, 1);
+  }
+
+  removeDuplicatedChat(queryResult: Message[]) {
+    const uniqueChats = new Map<string, Message>();
+
+    for (const message of queryResult) {
+      const chatKey = this.getChatKey(message);
+      if (uniqueChats.has(chatKey)) {
+        const existingMessage = uniqueChats.get(chatKey);
+        if (message.sentAt > existingMessage.sentAt) {
+          uniqueChats.set(chatKey, message);
+        }
+      } else {
+        uniqueChats.set(chatKey, message);
+      }
+    }
+
+    return Array.from(uniqueChats.values());
+  }
+
+  getChatKey(message: Message): string {
+    const { senderId, recipientId } = message;
+    const sortedIds = [senderId, recipientId].sort();
+    return sortedIds.join('-');
   }
 }
