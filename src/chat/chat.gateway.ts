@@ -48,7 +48,7 @@ export class ChatGateway
 
     const data = await this.chatService.getUserMessagePreviews(client.user.id);
 
-    this.server.to(client.id).emit('getPreviousMessages', data);
+    this.server.to(client.id).emit('getPreviewMessages', data);
   }
 
   handleDisconnect(client: AuthSocket) {
