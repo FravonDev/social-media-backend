@@ -8,11 +8,12 @@ export class SearchService {
   constructor(private readonly prisma: PrismaService) { }
 
   async search(searchDto: SearchDto, offset: number, limit: number) {
-    const { username } = searchDto
+    const { searchTerm } = searchDto
     const result: User[] = await this.prisma.$queryRaw(Prisma.sql`
-    SELECT "username"
+    SELECT "name","username", "photo"
     FROM "User"
-    WHERE LOWER("username") LIKE LOWER(${`%${username}%`})
+    WHERE LOWER("username") LIKE LOWER(${`%${searchTerm}%`})
+    OR LOWER("name") LIKE ${`%${searchTerm}%`}
     ORDER BY "username" ASC
     OFFSET ${offset}
     LIMIT ${limit};

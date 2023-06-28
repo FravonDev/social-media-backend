@@ -16,11 +16,11 @@ export class SearchPaginationParams {
     @IsInt()
     @IsDefined()
     @Min(1)
-    @Max(50)
+    @Max(10)
     @ApiProperty({
         description: 'Limit value for pagination (number of users to retrieve in search )',
         minimum: 1,
-        maximum: 50,
+        maximum: 10,
     })
     @Type(() => Number)
     limit: number;

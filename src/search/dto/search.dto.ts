@@ -3,7 +3,7 @@ import { IsOptional, IsString } from "class-validator";
 
 export class SearchDto {    
     @IsString()
-    @ApiProperty({ description: 'The username of user search' })
-    username: string;
+    @ApiProperty({ description: 'The term (username or name) to search' })
+    searchTerm: string;
 
 }
