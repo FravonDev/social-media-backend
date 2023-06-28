@@ -1,26 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSearchDto } from './dto/create-search.dto';
-import { UpdateSearchDto } from './dto/update-search.dto';
+import { SearchDto } from './dto/search.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class SearchService {
-  create(createSearchDto: CreateSearchDto) {
-    return 'This action adds a new search';
-  }
+  constructor(private readonly prisma: PrismaService) { }
 
-  findAll() {
-    return `This action returns all search`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} search`;
-  }
-
-  update(id: number, updateSearchDto: UpdateSearchDto) {
-    return `This action updates a #${id} search`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} search`;
+  async search(searchDto: SearchDto, offset: number, limit: number) {
+    const { username } = searchDto
+    const result: User[] = await this.prisma.$queryRaw(Prisma.sql`
+    SELECT "username"
+    FROM "User"
+    WHERE LOWER("username") LIKE LOWER(${`%${username}%`})
+    ORDER BY "username" ASC
+    OFFSET ${offset}
+    LIMIT ${limit};
+    `);
+    return result
   }
 }

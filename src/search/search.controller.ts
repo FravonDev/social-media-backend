@@ -1,34 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Body, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { SearchService } from './search.service';
-import { CreateSearchDto } from './dto/create-search.dto';
-import { UpdateSearchDto } from './dto/update-search.dto';
+import { SearchDto } from './dto/search.dto';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { SearchPaginationParams } from './dto/search-pagination.dto';
 
 @Controller('search')
 export class SearchController {
-  constructor(private readonly searchService: SearchService) {}
+  constructor(private readonly searchService: SearchService) { }
 
-  @Post()
-  create(@Body() createSearchDto: CreateSearchDto) {
-    return this.searchService.create(createSearchDto);
-  }
-
+  @ApiBearerAuth()
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiOperation({ summary: 'Get search results' })
   @Get()
-  findAll() {
-    return this.searchService.findAll();
+  @HttpCode(HttpStatus.OK)
+  @HttpCode(200)
+  search(@Body() searchDto: SearchDto, @Query() searchaginationParams: SearchPaginationParams) {
+    const { offset, limit } = searchaginationParams;
+
+    return this.searchService.search(searchDto, offset, limit);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.searchService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSearchDto: UpdateSearchDto) {
-    return this.searchService.update(+id, updateSearchDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.searchService.remove(+id);
-  }
 }
