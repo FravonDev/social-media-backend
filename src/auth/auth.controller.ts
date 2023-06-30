@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthRequest } from './models/AuthRequest';
 import { IsPublic } from './decorators/is-public.decorator';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller()
 export class AuthController {
@@ -15,6 +15,16 @@ export class AuthController {
     @Post('user/login')
     @HttpCode(HttpStatus.OK)
     @UseGuards(LocalAuthGuard)
+    @ApiBody({
+        schema: {
+          type: 'object',
+          properties: {
+            username: { type: 'string' },
+            password: { type: 'string' },
+          },
+          required: ['username', 'password'],
+        },
+      })
     login(@Request() req: AuthRequest) {        
         return this.authService.login(req.user)
     }
