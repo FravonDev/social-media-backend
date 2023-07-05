@@ -5,6 +5,7 @@ import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { CheckUsernameDto } from './dto/check-username.dto';
 
 @Controller('user')
 export class UserController {
@@ -25,12 +26,18 @@ export class UserController {
   updateu(@CurrentUser() currentUser, @Body() data: UpdateUserDto) {
     return this.userService.update(currentUser.id, data);
   }
-  
+
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiOperation({ summary: 'Delete user account' })
   @Delete('delete')
   remove(@CurrentUser() currentUser) {
     return this.userService.remove(currentUser.id);
+  }
+
+  @IsPublic()
+  @Post('checkusername')
+  async username(@Body() CheckUsername: CheckUsernameDto) {
+    return await this.userService.checkUsernameIsAvailable(CheckUsername);
   }
 }

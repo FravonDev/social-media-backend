@@ -10,10 +10,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { v4 as uuid } from 'uuid';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CheckUsernameDto } from './dto/check-username.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const data: Prisma.UserCreateInput = {
@@ -79,5 +80,22 @@ export class UserService {
 
   async remove(id: string) {
     await this.prisma.user.delete({ where: { id } });
+  }
+
+  async checkUsernameIsAvailable(CheckUsername: CheckUsernameDto) {
+    const { username } = CheckUsername;
+    const existsUser: User[] = await this.prisma.$queryRaw(
+      Prisma.sql`
+        SELECT *
+        FROM "User"
+        WHERE LOWER("username") = LOWER(${username})
+        `
+    )
+    if (existsUser.length < 1) {
+      return false
+    }
+
+    return true
+    
   }
 }
