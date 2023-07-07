@@ -21,6 +21,7 @@ model User {
   password         String
   name             String
   photo            String?
+  bio              String?
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
   following        Follow[]  @relation("Following")
