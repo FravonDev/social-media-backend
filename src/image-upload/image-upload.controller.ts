@@ -26,7 +26,7 @@ export class ImageUploadController {
   @UseInterceptors(
     FileInterceptor('file', uploadOptions),
   )
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @CurrentUser() user: User,) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @CurrentUser() user: User) {
     return await this.imageUploadService.uploadImage(file, user.id);
   }
 

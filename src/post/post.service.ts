@@ -7,10 +7,16 @@ import { v4 as uuid } from 'uuid'
 import { Post } from './entities/post.entity';
 import { CreateLikeDto } from './dto/like.dto';
 import { UnlikeDto } from './dto/unlike.dto';
+import { UserService } from 'src/user/user.service';
+import { UserDetails } from 'src/user/interfaces/user.details';
+import { GetPostParams } from './dto/getPostParams.dto';
 
 @Injectable()
 export class PostService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userService: UserService,
+  ) { }
 
   async create(userId, createPostDto: CreatePostDto): Promise<Post> {
     const data: Prisma.PostCreateInput = {
@@ -116,7 +122,7 @@ export class PostService {
     return post
   }
 
-  async findRelevantPosts(userId: string, offset: number, limit: number): Promise<Post[]> {
+  async findRelevantPosts(userId: string, offset: number, limit: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { following: true },
@@ -129,8 +135,65 @@ export class PostService {
       orderBy: { createdAt: 'desc' },
       skip: offset,
       take: limit,
-    });    
+      include: {
+        author: true,
+        Like: {
+          where: { userId },
+          select: { userId: true },
+        },
+        _count: {
+          select: { Comment: true, Like: true }
+        }
+      },
+    });
 
-    return posts
+
+    const filteredPosts = posts.map((post) => {
+      const { author } = post;
+
+      const userDetails: UserDetails = {
+        id: author.id,
+        name: author.name,
+        username: author.username,
+        photo: author.photo,
+      };
+
+      return {
+        ...post,
+        author: userDetails,
+      }
+    });
+    return filteredPosts
+  }
+
+  async findPost(userId: string, getPostParams: GetPostParams) {
+    const { postId } = getPostParams;
+
+
+    const post = await this.prisma.post.findFirst({
+      where: { id: postId },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+            photo: true
+          }
+        },
+        Like: {
+          where: { userId },
+          select: { userId: true },
+        },
+        _count: {
+          select: { Comment: true, Like: true }
+        }
+      },
+    });
+
+
+    return post
+
   }
 }

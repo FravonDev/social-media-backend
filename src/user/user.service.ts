@@ -11,9 +11,13 @@ import { User } from './entities/user.entity';
 import { v4 as uuid } from 'uuid';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CheckUsernameDto } from './dto/check-username.dto';
+import { UserDetails } from './interfaces/user.details';
+
+
 
 @Injectable()
 export class UserService {
+
   constructor(private readonly prisma: PrismaService) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -96,6 +100,51 @@ export class UserService {
     }
 
     return true
-    
+
+  }
+
+  async getCurrentUser(user: User): Promise<UserDetails> {
+    const { id } = user;
+
+    const currentUser = await this.prisma.user.findFirst({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        photo: true
+      },
+    });
+
+    if (!currentUser) {
+      throw new NotFoundException();
+    }
+
+    const userDetails: UserDetails = {
+      id: currentUser.id,
+      name: currentUser.name,
+      username: currentUser.username,
+      photo: currentUser.photo
+    };
+
+    return userDetails;
+  }
+
+  async getUserDetails(userId: string): Promise<UserDetails> {
+    const user = await this.prisma.user.findFirst({ where: { id: userId } })
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    const userDetails: UserDetails = {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      photo: user.photo
+    };
+    return userDetails
   }
 }

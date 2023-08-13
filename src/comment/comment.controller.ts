@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { GetComment } from './dto/get-comment.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -46,17 +45,17 @@ export class CommentController {
   @ApiOperation({ summary: 'Get relevant Comments' })
   @Get()
   @HttpCode(HttpStatus.OK)
-  @HttpCode(200)  findComments(@Body() getComment: GetComment, @Query() commentPaginationParams: CommentPaginationParams) {
-    const { offset, limit } = commentPaginationParams;
+  @HttpCode(200) findComments(@Query() commentPaginationParams: CommentPaginationParams, @CurrentUser() user: User) {
+    const { offset, limit, postId } = commentPaginationParams;
 
-    return this.commentService.findRelevantComments(getComment.postId, offset, limit);
+    return this.commentService.findRelevantComments(user.id, postId, offset, limit);
   }
   @ApiBearerAuth()
   @ApiResponse({ status: 201, description: 'Created' })
   @ApiOperation({ summary: 'Like a comment' })
   @Post('like')
   @HttpCode(HttpStatus.CREATED)
-  createLike(@CurrentUser() user: User, @Body() likeCommentDto: CommentLikeDto ) {
+  createLike(@CurrentUser() user: User, @Body() likeCommentDto: CommentLikeDto) {
     return this.commentService.like(user.id, likeCommentDto);
   }
 

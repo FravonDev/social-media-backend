@@ -10,6 +10,7 @@ import { PaginationParams } from './dto/pagination.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateLikeDto } from './dto/like.dto';
 import { UnlikeDto } from './dto/unlike.dto';
+import { GetPostParams } from './dto/getPostParams.dto';
 
 @Controller('post')
 export class PostController {
@@ -47,7 +48,7 @@ export class PostController {
   @Delete()
   @HttpCode(204)
   remove(@Body() deletePostDto: DeletePostDto, @CurrentUser() user: User) {
-    return this.postService.remove(user.id, deletePostDto.id);
+    return this.postService.remove(user.id, deletePostDto.postId);
   }
 
   @ApiBearerAuth()
@@ -76,5 +77,18 @@ export class PostController {
   @HttpCode(HttpStatus.NO_CONTENT)
   removeLike(@CurrentUser() user: User, @Body() unlikeDTO: UnlikeDto) {
     return this.postService.unlike(user.id, unlikeDTO);
+  }
+
+
+  @ApiBearerAuth()
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiOperation({ summary: 'Get a post' })
+  @Get('/:id')
+  @HttpCode(200)
+  getPost(@CurrentUser() user: User, @Query() getPostParams: GetPostParams) {
+    console.log('GetPostParams');
+    console.log(getPostParams);
+
+    return this.postService.findPost(user.id, getPostParams);
   }
 }
