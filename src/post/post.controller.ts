@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, Query, UsePipes, ValidationPipe, HttpStatus, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  Query,
+  HttpStatus,
+  HttpCode,
+} from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -14,7 +24,7 @@ import { GetPostParams } from './dto/getPostParams.dto';
 
 @Controller('post')
 export class PostController {
-  constructor(private readonly postService: PostService) { }
+  constructor(private readonly postService: PostService) {}
 
   @ApiBearerAuth()
   @ApiResponse({ status: 201, description: 'Created' })
@@ -23,8 +33,11 @@ export class PostController {
   @HttpCode(201)
   craetePost(@Body() createPostDto: CreatePostDto, @CurrentUser() user: User) {
     //IMPROVE: make this validation at DTO
-    if (!createPostDto.images && !createPostDto.text) {
-      throw new MissingDataException()
+    if (
+      (!createPostDto.images && !createPostDto.text) ||
+      (createPostDto.images.length < 1 && !createPostDto.text)
+    ) {
+      throw new MissingDataException();
     }
     return this.postService.create(user.id, createPostDto);
   }
@@ -36,8 +49,11 @@ export class PostController {
   @HttpCode(204)
   update(@Body() updatePostDto: UpdatePostDto, @CurrentUser() user: User) {
     //IMPROVE: make this validation at DTO
-    if (!updatePostDto.images && !updatePostDto.text) {
-      throw new MissingDataException()
+    if (
+      (!updatePostDto.images && !updatePostDto.text) ||
+      (updatePostDto.images.length < 1 && !updatePostDto.text)
+    ) {
+      throw new MissingDataException();
     }
     return this.postService.update(user.id, updatePostDto);
   }
@@ -56,7 +72,10 @@ export class PostController {
   @ApiOperation({ summary: 'Get relevant Posts' })
   @Get()
   @HttpCode(200)
-  getPosts(@CurrentUser() user: User, @Query() paginationParams: PaginationParams) {
+  getPosts(
+    @CurrentUser() user: User,
+    @Query() paginationParams: PaginationParams,
+  ) {
     const { offset, limit } = paginationParams;
     return this.postService.findRelevantPosts(user.id, offset, limit);
   }
@@ -78,7 +97,6 @@ export class PostController {
   removeLike(@CurrentUser() user: User, @Body() unlikeDTO: UnlikeDto) {
     return this.postService.unlike(user.id, unlikeDTO);
   }
-
 
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'OK' })

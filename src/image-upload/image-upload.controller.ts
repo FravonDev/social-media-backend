@@ -16,7 +16,7 @@ export class ImageUploadController {
   @ApiOperation({ summary: 'Upload image' })
   @ApiResponse({ status: 201, description: 'Created' })
   @ApiBody({
-    description: 'Image in format JPG, JPEG ou PNG',
+    description: 'Image in format JPG, JPEG',
     type: 'object',
     schema: {
       format: 'binary',
