@@ -9,37 +9,37 @@ export class ImageUploadService {
   constructor(private readonly prisma: PrismaService) { }
 
   async uploadImage(file: Express.Multer.File, uploadedBy: string) {
-      if (!file) {
-        throw new BadRequestException('No file attached');
-      }
+    if (!file) {
+      throw new BadRequestException('No file attached');
+    }
 
-      const { buffer } = file;
+    const { buffer } = file;
 
-      const compressedBuffer: Buffer = await sharp(buffer)
-        .resize({
-          width: 800,
-          height: 800,
-          fit: 'cover',
-        })
-        .webp({ quality: 100, force: true })
-        .toBuffer();
+    const compressedBuffer: Buffer = await sharp(buffer)
+      .resize({
+        width: 800,
+        height: 800,
+        fit: 'cover',
+      })
+      .webp({ quality: 100, force: true })
+      .toBuffer();
+    const id = uuid()
+    const newMimetype = 'image/webp';
+    const filename = `${id}${'.' + newMimetype}`;
 
-      const newMimetype = 'image/webp';
-      const filename = `${uuid()}${'.' + newMimetype}`;
+    const createImageData: Prisma.ImageCreateInput = {
+      id,
+      filename,
+      contentType: newMimetype,
+      data: Buffer.from(compressedBuffer),
+      uploadedBy: { connect: { id: uploadedBy } },
+    };
+    const createdImage = await this.prisma.image.create({ data: createImageData });
+    const response = {
+      imageUrl: `http://localhost:3000/image/${createdImage.id}`,
+    };
 
-      const createImageData: Prisma.ImageCreateInput = {
-        id: uuid(),
-        filename,
-        contentType: newMimetype,
-        data: Buffer.from(compressedBuffer),
-        uploadedBy: { connect: { id: uploadedBy } },
-      };
-      const createdImage = await this.prisma.image.create({ data: createImageData });
-      const response = {
-        imageUrl: `http://localhost:3000/image/${createdImage.id}`,
-      };
-
-      return response;
+    return response;
 
   }
 

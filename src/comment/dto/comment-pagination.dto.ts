@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDefined, IsInt, Max, Min } from 'class-validator';
+import { IsDefined, IsInt, IsNotEmpty, IsUUID, Max, Min } from 'class-validator';
 
 export class CommentPaginationParams {
     @IsInt()
@@ -24,4 +24,9 @@ export class CommentPaginationParams {
     })
     @Type(() => Number)
     limit: number;
+
+    @ApiProperty({ description: 'post ID' })
+    @IsUUID()
+    @IsNotEmpty()
+    postId: string;
 }

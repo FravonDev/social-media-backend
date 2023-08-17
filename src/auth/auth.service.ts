@@ -11,19 +11,20 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   login(user: User): UserToken {
     //transforma em jwt
     const payload: UserPayload = {
       sub: user.id,
+      id: user.id,
       email: user.email,
       name: user.name,
       username: user.username,
     };
     const JwtToken = this.jwtService.sign(payload);
 
-    return { access_token: JwtToken };
+    return { access_token: JwtToken, id: payload.id };
   }
 
   async validateUser(email: string, password: string): Promise<User> {

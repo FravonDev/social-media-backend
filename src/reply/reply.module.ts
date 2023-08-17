@@ -5,10 +5,11 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { CommentService } from 'src/comment/comment.service';
 import { PostService } from 'src/post/post.service';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports: [PrismaModule, CommentModule],
+  imports: [PrismaModule, CommentModule, UserModule],
   controllers: [ReplyController],
   providers: [ReplyService, CommentService, PostService]
 })
-export class ReplyModule {}
+export class ReplyModule { }

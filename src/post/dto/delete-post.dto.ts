@@ -5,5 +5,5 @@ export class DeletePostDto {
     @ApiProperty({ description: 'Post Id' })
     @IsUUID()
     @IsNotEmpty()
-    id: string;
+    postId: string;
 }

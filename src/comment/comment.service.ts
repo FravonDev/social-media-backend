@@ -14,6 +14,7 @@ export class CommentService {
     private readonly prisma: PrismaService,
     private readonly postService: PostService
   ) { }
+
   async create(userId, createComment: CreateCommentDto) {
     const { postId, text } = createComment;
 
@@ -31,7 +32,30 @@ export class CommentService {
       createdAt: new Date(),
     };
 
-    await this.prisma.comment.create({ data })
+    const createdComment = await this.prisma.comment.create({ data })
+
+    const comment = await this.prisma.comment.findUnique({
+      where: { id: createdComment.id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            photo: true,
+          },
+        },
+        Likes: {
+          where: { userId },
+          select: { userId: true },
+        },
+        _count: {
+          select: { Likes: true },
+        },
+      },
+    });
+
+    return comment
   }
 
   async update(updateComment: UpdateCommentDto) {
@@ -89,13 +113,58 @@ export class CommentService {
     if (!like) {
       throw new NotFoundException("Like not found")
     }
-    await this.prisma.like.delete({ where: { id: like.id} })
+    await this.prisma.like.delete({ where: { id: like.id } })
   }
 
-  async findRelevantComments(postId: string, offset: number, limit: number) {
+  async findPost(userId: string, commentId: string) {
+    const comment = await this.prisma.comment.findFirst({
+      where: { id: commentId },
+      orderBy: { createdAt: 'asc' },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            photo: true
+          }
+        },
+        Likes: {
+          where: { userId },
+          select: { userId: true },
+        },
+        _count: {
+          select: { Likes: true }
+        }
+      },
+    }
+    )
+
+    return comment
+  }
+
+
+  async findRelevantComments(userId: string, postId: string, offset: number, limit: number) {
     const comments = await this.prisma.comment.findMany({
       where: { post: { id: postId } },
       orderBy: { createdAt: 'asc' },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            photo: true
+          }
+        },
+        Likes: {
+          where: { userId },
+          select: { userId: true },
+        },
+        _count: {
+          select: { Likes: true }
+        }
+      },
       skip: offset,
       take: limit
     }
@@ -105,6 +174,7 @@ export class CommentService {
 
   async findbyid(commentId: string) {
     const commentExists = await this.prisma.comment.findUnique({ where: { id: commentId } })
+
     if (!commentExists) {
       throw new NotFoundException('Comment not found')
     }

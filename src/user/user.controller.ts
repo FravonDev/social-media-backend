@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
@@ -6,6 +6,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { CheckUsernameDto } from './dto/check-username.dto';
+import { User } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -39,5 +40,14 @@ export class UserController {
   @Post('checkusername')
   async username(@Body() CheckUsername: CheckUsernameDto) {
     return await this.userService.checkUsernameIsAvailable(CheckUsername);
+  }
+
+  @ApiBearerAuth()
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiOperation({ summary: 'Get relevant Posts' })
+  @Get('/me')
+  @HttpCode(200)
+  getMe(@CurrentUser() user: User) {
+    return this.userService.getCurrentUser(user);
   }
 }

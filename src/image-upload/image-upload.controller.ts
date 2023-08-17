@@ -16,7 +16,7 @@ export class ImageUploadController {
   @ApiOperation({ summary: 'Upload image' })
   @ApiResponse({ status: 201, description: 'Created' })
   @ApiBody({
-    description: 'Image in format JPG, JPEG ou PNG',
+    description: 'Image in format JPG, JPEG',
     type: 'object',
     schema: {
       format: 'binary',
@@ -26,7 +26,7 @@ export class ImageUploadController {
   @UseInterceptors(
     FileInterceptor('file', uploadOptions),
   )
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @CurrentUser() user: User,) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @CurrentUser() user: User) {
     return await this.imageUploadService.uploadImage(file, user.id);
   }
 
