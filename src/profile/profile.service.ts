@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUserProfile(getProfileDto: GetProfileParamDto) {
+  async getUserProfile(getProfileDto: GetProfileParamDto, userId: string) {
     const { username } = getProfileDto;
     //TODO: get user profile info
 
@@ -19,6 +19,11 @@ export class ProfileService {
         username: true,
         photo: true,
         bio: true,
+        followedBy: {
+          where: {
+            followerId: userId,
+          },
+        },
         _count: {
           select: {
             following: true,
@@ -27,6 +32,20 @@ export class ProfileService {
         },
       },
     });
-    return results;
+
+    if (results) {
+      const formattedResponse = {
+        id: results.id,
+        name: results.name,
+        username: results.username,
+        photo: results.photo,
+        bio: results.bio,
+        isFollowedByCurrentUser: results.followedBy.length > 0,
+        followingCount: results._count.following,
+        followersCount: results._count.followedBy,
+      };
+      return formattedResponse;
+    }
+    return null;
   }
 }
