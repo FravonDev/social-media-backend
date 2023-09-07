@@ -8,6 +8,7 @@ import {
   Query,
   HttpStatus,
   HttpCode,
+  Param,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -21,6 +22,8 @@ import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateLikeDto } from './dto/like.dto';
 import { UnlikeDto } from './dto/unlike.dto';
 import { GetPostParams } from './dto/getPostParams.dto';
+import { GetUserPostsParam } from './dto/get-user-posts-params.dto';
+import { GetUserPostsQuery } from './dto/get-user-query-params.dto';
 
 @Controller('post')
 export class PostController {
@@ -101,12 +104,27 @@ export class PostController {
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiOperation({ summary: 'Get a post' })
-  @Get('/:id')
+  @Get('/get/:id')
   @HttpCode(200)
   getPost(@CurrentUser() user: User, @Query() getPostParams: GetPostParams) {
     console.log('GetPostParams');
     console.log(getPostParams);
-
     return this.postService.findPost(user.id, getPostParams);
+  }
+
+  @Get('/user/:username')
+  async getUserPosts(
+    @Param() getUserPostsParam: GetUserPostsParam,
+    @Query() getUserQueryParams: GetUserPostsQuery,
+  ) {
+    const { offset, limit } = getUserQueryParams;
+    const { username } = getUserPostsParam;
+
+    const result = await this.postService.findUserPosts(
+      username,
+      offset,
+      limit,
+    );
+    return result;
   }
 }

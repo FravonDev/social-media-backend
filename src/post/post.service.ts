@@ -1,9 +1,13 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import { v4 as uuid } from 'uuid'
+import { v4 as uuid } from 'uuid';
 import { Post } from './entities/post.entity';
 import { CreateLikeDto } from './dto/like.dto';
 import { UnlikeDto } from './dto/unlike.dto';
@@ -16,7 +20,7 @@ export class PostService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   async create(userId, createPostDto: CreatePostDto): Promise<Post> {
     const data: Prisma.PostCreateInput = {
@@ -26,20 +30,19 @@ export class PostService {
       createdAt: new Date(),
       author: {
         connect: { id: userId },
-      }
+      },
     };
 
-    return await this.prisma.post.create({ data })
+    return await this.prisma.post.create({ data });
   }
 
   async update(userId, updatePostDto: UpdatePostDto) {
     const { id } = updatePostDto;
 
-    const user = await this.prisma.user.findUnique(
-      {
-        where: { id: userId },
-        include: { Post: true }
-      });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { Post: true },
+    });
     const post = user.Post.find((item) => item.id === id);
 
     if (!post) {
@@ -48,27 +51,26 @@ export class PostService {
 
     await this.prisma.post.update({
       data: updatePostDto,
-      where: { id }
-    })
+      where: { id },
+    });
   }
 
   async remove(userId, postId: string) {
-    const user = await this.prisma.user.findUnique(
-      {
-        where: { id: userId },
-        include: { Post: true }
-      });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { Post: true },
+    });
     const post = user.Post.find((item) => item.id === postId);
 
     if (!post) {
       throw new NotFoundException('Post not found');
     }
-    await this.prisma.post.delete({ where: { id: postId } })
+    await this.prisma.post.delete({ where: { id: postId } });
   }
   async like(userId, createLikeDto: CreateLikeDto) {
     const { postId } = createLikeDto;
 
-    const post = await this.prisma.post.findUnique({ where: { id: postId } })
+    const post = await this.prisma.post.findUnique({ where: { id: postId } });
 
     if (!post) {
       throw new NotFoundException('Post not found');
@@ -77,12 +79,12 @@ export class PostService {
     const alreadyLiked = await this.prisma.like.findFirst({
       where: {
         user: { id: userId },
-        post: { id: postId }
-      }
-    })
+        post: { id: postId },
+      },
+    });
 
     if (alreadyLiked) {
-      throw new ConflictException("You already like this post")
+      throw new ConflictException('You already like this post');
     }
 
     const data: Prisma.LikeCreateInput = {
@@ -93,7 +95,7 @@ export class PostService {
       },
       post: {
         connect: { id: postId },
-      }
+      },
     };
 
     await this.prisma.like.create({ data });
@@ -105,11 +107,11 @@ export class PostService {
     const like = await this.prisma.like.findFirst({
       where: {
         user: { id: userId },
-        post: { id: postId }
-      }
-    })
+        post: { id: postId },
+      },
+    });
     if (!like) {
-      throw new NotFoundException("Like not found")
+      throw new NotFoundException('Like not found');
     }
     await this.prisma.like.delete({ where: { id: like.id } });
   }
@@ -117,9 +119,26 @@ export class PostService {
   async findById(id: string): Promise<Post> {
     const post = await this.prisma.post.findFirst({ where: { id } });
     if (!post) {
-      throw new NotFoundException('Post not found')
+      throw new NotFoundException('Post not found');
     }
-    return post
+    return post;
+  }
+
+  async findUserPosts(username: string, offset: number, limit: number) {
+    const results = await this.prisma.post.findMany({
+      where: { author: { username: username } },
+      orderBy: { createdAt: 'desc' },
+      skip: offset,
+      take: limit,
+      include: {
+        Like: {
+          where: { user: { username: username } },
+          select: { userId: true },
+        },
+        _count: { select: { Comment: true, Like: true } },
+      },
+    });
+    return results;
   }
 
   async findRelevantPosts(userId: string, offset: number, limit: number) {
@@ -142,11 +161,10 @@ export class PostService {
           select: { userId: true },
         },
         _count: {
-          select: { Comment: true, Like: true }
-        }
+          select: { Comment: true, Like: true },
+        },
       },
     });
-
 
     const filteredPosts = posts.map((post) => {
       const { author } = post;
@@ -161,14 +179,13 @@ export class PostService {
       return {
         ...post,
         author: userDetails,
-      }
+      };
     });
-    return filteredPosts
+    return filteredPosts;
   }
 
   async findPost(userId: string, getPostParams: GetPostParams) {
     const { postId } = getPostParams;
-
 
     const post = await this.prisma.post.findFirst({
       where: { id: postId },
@@ -179,21 +196,19 @@ export class PostService {
             id: true,
             username: true,
             name: true,
-            photo: true
-          }
+            photo: true,
+          },
         },
         Like: {
           where: { userId },
           select: { userId: true },
         },
         _count: {
-          select: { Comment: true, Like: true }
-        }
+          select: { Comment: true, Like: true },
+        },
       },
     });
 
-
-    return post
-
+    return post;
   }
 }

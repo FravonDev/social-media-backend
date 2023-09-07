@@ -13,9 +13,22 @@ import { PostModule } from './post/post.module';
 import { CommentModule } from './comment/comment.module';
 import { ReplyModule } from './reply/reply.module';
 import { SearchModule } from './search/search.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, ImageUploadModule, ChatModule, FollowModule, PostModule, CommentModule, ReplyModule, SearchModule],
+  imports: [
+    PrismaModule,
+    UserModule,
+    AuthModule,
+    ImageUploadModule,
+    ChatModule,
+    FollowModule,
+    PostModule,
+    CommentModule,
+    ReplyModule,
+    SearchModule,
+    ProfileModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
