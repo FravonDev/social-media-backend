@@ -6,17 +6,15 @@ import {
   HttpCode,
   Post,
 } from '@nestjs/common';
-
-import { AccountAlreadyExistsError } from '@/domain/forum/application/use-cases/errors/student-already-exists-error';
-import { Public } from '@/infra/auth/public';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateAccountBody } from './dtos/create-account-body';
-import { CreateAccountUseCase } from '@/domain/social-media/application/use-cases/user/create-user-account';
+import { CreateUserUseCase } from '@/app/use-cases/user/create-user';
+import { UsernameAlreadyExistsError } from '@/app/use-cases/user/errors/username-already-exists';
+import { EmailAlreadyExistsError } from '@/app/use-cases/user/errors/email-already-exists';
 
 @Controller('/accounts/register')
-@Public()
 export class CreateAccountController {
-  constructor(private createAccount: CreateAccountUseCase) {}
+  constructor(private createUser: CreateUserUseCase) {}
 
   @Post()
   @HttpCode(201)
@@ -25,7 +23,7 @@ export class CreateAccountController {
   async handle(@Body() body: CreateAccountBody) {
     const { name, email, password, username, photo, bio } = body;
 
-    const result = await this.createAccount.execute({
+    const result = await this.createUser.execute({
       email,
       name,
       username,
@@ -38,7 +36,7 @@ export class CreateAccountController {
       const error = result.value;
 
       switch (error.constructor) {
-        case AccountAlreadyExistsError:
+        case UsernameAlreadyExistsError || EmailAlreadyExistsError:
           throw new ConflictException(error.message);
         default:
           throw new BadRequestException(error.message);
