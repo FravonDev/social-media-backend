@@ -1,42 +1,17 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaModule } from './prisma/prisma.module';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { ImageUploadModule } from './image-upload/image-upload.module';
-import { ChatModule } from './chat/chat.module';
-import { FollowModule } from './follow/follow.module';
-import { PostModule } from './post/post.module';
-import { CommentModule } from './comment/comment.module';
-import { ReplyModule } from './reply/reply.module';
-import { SearchModule } from './search/search.module';
-import { ProfileModule } from './profile/profile.module';
+import { EnvModule } from './infra/env/env.module';
+import { ConfigModule } from '@nestjs/config';
+import { envSchema } from './infra/env/env';
+import { HttpModule } from '@/infra/http/http.module';
 
 @Module({
   imports: [
-    PrismaModule,
-    UserModule,
-    AuthModule,
-    ImageUploadModule,
-    ChatModule,
-    FollowModule,
-    PostModule,
-    CommentModule,
-    ReplyModule,
-    SearchModule,
-    ProfileModule,
-  ],
-  controllers: [AppController],
-  providers: [
-    AppService,
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    ConfigModule.forRoot({
+      validate: (env) => envSchema.parse(env),
+      isGlobal: true,
+    }),
+    HttpModule,
+    EnvModule,
   ],
 })
 export class AppModule {}
