@@ -15,99 +15,15 @@ generator client {
 }
 
 model User {
-  id               String    @id @default(uuid())
-  email            String    @unique
-  username         String    @unique
-  password         String
-  name             String
-  photo            String?
-  bio              String?
-  sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
-  following        Follow[]  @relation("Following")
-  followedBy       Follow[]  @relation("FollowedBy")
-  images           Image[]   @relation("UserImages")
-  Post             Post[]    @relation("Author")
-  Comment          Comment[] @relation("UserComment")
-  Reply            Reply[]   @relation("UserReplies")
-  Like             Like[]    @relation("UserLike")
-}
-
-model Follow {
-  id         String   @id @default(uuid())
-  follower   User     @relation("Following", fields: [followerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  followerId String
-  followed   User     @relation("FollowedBy", fields: [followedId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  followedId String
-  createdAt  DateTime
-}
-
-model Image {
-  id           String @id @default(uuid())
-  filename     String
-  contentType  String
-  data         Bytes
-  uploadedBy   User   @relation("UserImages", fields: [uploadedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  uploadedById String
-}
-
-model Post {
-  id        String    @id @default(uuid())
-  text      String?
-  images    String[]
-  author    User      @relation("Author", fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  authorId  String
-  createdAt DateTime
-  updatedAt DateTime?
-  Like      Like[]    @relation("PostLike")
-  Comment   Comment[] @relation("PostComment")
-}
-
-model Comment {
-  id        String    @id @default(uuid())
-  text      String
-  user      User      @relation("UserComment", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
-  post      Post      @relation("PostComment", fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  postId    String
-  createdAt DateTime
-  updatedAt DateTime?
-  Reply     Reply[]   @relation("CommentReplies")
-  Likes     Like[]    @relation("CommentLike")
-}
-
-model Reply {
-  id         String    @id @default(uuid())
-  text       String
-  user       User      @relation("UserReplies", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId     String
-  comment    Comment   @relation("CommentReplies", fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  commentId  String
-  replyLikes Like[]    @relation("ReplyLike")
-  createdAt  DateTime
-  updatedAt  DateTime?
-}
-
-model Like {
-  id        String   @id @default(uuid())
-  user      User     @relation("UserLike", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
-  post      Post?    @relation("PostLike", fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  postId    String?
-  comment   Comment? @relation("CommentLike", fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  commentId String?
-  reply     Reply?   @relation("ReplyLike", fields: [replyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  replyId   String?
-  createdAt DateTime
-}
-
-model Message {
-  id          String    @id @default(uuid())
-  sender      User      @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  senderId    String
-  recipient   User      @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  recipientId String
-  text        String
-  sentAt      DateTime
-  readAt      DateTime?
+  id              String    @id @default(uuid())
+  email           String    @unique
+  username        String    @unique
+  password        String
+  name            String
+  photo           String?
+  bio             String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime?
+  deletedAt       DateTime?
+  emailVerifiedAt DateTime?
 }
