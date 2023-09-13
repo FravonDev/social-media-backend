@@ -11,6 +11,7 @@ import { CreateAccountBody } from './dtos/create-account-body';
 import { CreateUserUseCase } from '@/app/use-cases/user/create-user';
 import { UsernameAlreadyExistsError } from '@/app/use-cases/user/errors/username-already-exists';
 import { EmailAlreadyExistsError } from '@/app/use-cases/user/errors/email-already-exists';
+import { Public } from '@/infra/auth/public';
 
 @Controller('/accounts/register')
 export class CreateAccountController {
@@ -18,6 +19,7 @@ export class CreateAccountController {
 
   @Post()
   @HttpCode(201)
+  @Public()
   @ApiResponse({ status: 201, description: 'Created' })
   @ApiOperation({ summary: 'Create user account' })
   async handle(@Body() body: CreateAccountBody) {
