@@ -43,12 +43,20 @@ describe('Authenticate User', () => {
     });
   });
 
-  it('should throw a WrongCredentialsError when credentials are wrong', async () => {
+  it('should throw a WrongCredentialsError when email are incorrect', async () => {
     const result = await authenticateUserUseCase.execute({
       email: 'wrongemail@example.com',
+      password: '12345678',
+    });
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(WrongCredentialsError);
+  });
+
+  it('should throw a WrongCredentialsError when password are incorrect', async () => {
+    const result = await authenticateUserUseCase.execute({
+      email: 'johndoe@example.com',
       password: 'wrongpassword',
     });
-    console.log(result);
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toBeInstanceOf(WrongCredentialsError);
   });

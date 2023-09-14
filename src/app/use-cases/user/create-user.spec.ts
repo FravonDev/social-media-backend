@@ -1,6 +1,8 @@
 import { InMemoryUsersRepository } from '@test/repositories/in-memory-user-repository';
 import { CreateUserUseCase } from './create-user';
 import { FakeHasher } from '@test/cryptography/fake-hasher';
+import { EmailAlreadyExistsError } from './errors/email-already-exists';
+import { UsernameAlreadyExistsError } from './errors/username-already-exists';
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeHasher: FakeHasher;
@@ -34,7 +36,7 @@ describe('create User', () => {
   });
 });
 
-it('should not be able to create a user and throw and error', async () => {
+it('should throw EmailAlreadyExistsError if email already exists', async () => {
   const result = await createUserUseCase.execute({
     email: 'johndoe@example.com',
     password: '12345678',
@@ -45,5 +47,21 @@ it('should not be able to create a user and throw and error', async () => {
   });
 
   expect(result.isLeft()).toBeTruthy();
+  expect(result.value).toBeInstanceOf(EmailAlreadyExistsError);
+  expect(inMemoryUsersRepository.users[1]).toBeUndefined();
+});
+
+it('should throw UsernameAlreadyExistsError if username already exists', async () => {
+  const result = await createUserUseCase.execute({
+    email: 'john2@example.com',
+    password: '12345678',
+    username: 'johndoe',
+    name: 'John Doe',
+    photo: null,
+    bio: null,
+  });
+
+  expect(result.isLeft()).toBeTruthy();
+  expect(result.value).toBeInstanceOf(UsernameAlreadyExistsError);
   expect(inMemoryUsersRepository.users[1]).toBeUndefined();
 });
