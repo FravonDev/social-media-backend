@@ -8,12 +8,16 @@ import { CreateUserUseCase } from '@/app/use-cases/user/create-user';
 import { CryptographyModule } from '../cryptography/cryptography.module';
 import { AuthenticateController } from './controllers/authenticate.controller';
 import { AuthenticateUserUseCase } from '@/app/use-cases/auth/authenticate-user';
-import { FollowController } from './controllers/follow-user.controller';
 import { FollowUserUseCase } from '@/app/use-cases/follow/follow-user';
+import { FollowUserController } from './controllers/follow-user.controller';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
-  controllers: [CreateAccountController, AuthenticateController],
+  controllers: [
+    CreateAccountController,
+    AuthenticateController,
+    FollowUserController,
+  ],
   providers: [
     /*
     here's where we'd put our usecases 
