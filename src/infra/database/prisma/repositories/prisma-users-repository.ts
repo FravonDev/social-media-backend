@@ -8,6 +8,20 @@ import { User } from '@/app/entities/user';
 export class PrismaUsersRepository implements UsersRepository {
   constructor(private prisma: PrismaService) {}
 
+  async findById(id: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return PrismaUserMapper.toDomain(user);
+  }
+
   async findByUsername(username: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
       where: {

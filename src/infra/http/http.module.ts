@@ -8,6 +8,8 @@ import { CreateUserUseCase } from '@/app/use-cases/user/create-user';
 import { CryptographyModule } from '../cryptography/cryptography.module';
 import { AuthenticateController } from './controllers/authenticate.controller';
 import { AuthenticateUserUseCase } from '@/app/use-cases/auth/authenticate-user';
+import { FollowController } from './controllers/follow-user.controller';
+import { FollowUserUseCase } from '@/app/use-cases/follow/follow-user';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -19,6 +21,7 @@ import { AuthenticateUserUseCase } from '@/app/use-cases/auth/authenticate-user'
     */
     CreateUserUseCase,
     AuthenticateUserUseCase,
+    FollowUserUseCase,
   ],
 })
 export class HttpModule {}

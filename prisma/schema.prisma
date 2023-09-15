@@ -26,4 +26,16 @@ model User {
   updatedAt       DateTime?
   deletedAt       DateTime?
   emailVerifiedAt DateTime?
+
+  following  Follow[] @relation("Following")
+  followedBy Follow[] @relation("FollowedBy")
+}
+
+model Follow {
+  id         String   @id @default(uuid())
+  follower   User     @relation("Following", fields: [followerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  followerId String
+  followed   User     @relation("FollowedBy", fields: [followedId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  followedId String
+  createdAt  DateTime
 }
