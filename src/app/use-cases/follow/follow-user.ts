@@ -8,7 +8,7 @@ import { Follow } from '@/app/entities/follow';
 
 interface FollowUserUseCaseRequest {
   followerId: string;
-  followedId: string;
+  username: string;
 }
 
 type FollowUsertUseCaseResponse = Either<
@@ -25,13 +25,14 @@ export class FollowUserUseCase {
 
   async execute({
     followerId,
-    followedId,
+    username,
   }: FollowUserUseCaseRequest): Promise<FollowUsertUseCaseResponse> {
-    const user = await this.usersRepository.findById(followedId);
+    const user = await this.usersRepository.findByUsername(username);
 
     if (!user) {
       return left(new UserNotFoundError());
     }
+    const followedId = user.id.toString();
 
     const alreadyFollows = await this.followsRepository.findByUserIds(
       followerId,

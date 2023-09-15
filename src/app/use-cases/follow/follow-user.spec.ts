@@ -41,17 +41,17 @@ describe('Follow User', () => {
     await createUserUseCase.execute(johnny);
     await createUserUseCase.execute(sarah);
 
-    const user1Result = await inMemoryUsersRepository.findByUsername(
+    const johnnyresult = await inMemoryUsersRepository.findByUsername(
       johnny.username,
     );
-    const user2Result = await inMemoryUsersRepository.findByUsername(
+    const sarahresult = await inMemoryUsersRepository.findByUsername(
       sarah.username,
     );
 
-    if (user1Result && user2Result) {
+    if (johnnyresult && sarahresult) {
       const result = await followUserUseCase.execute({
-        followerId: user1Result.id.toString(),
-        followedId: user2Result.id.toString(),
+        followerId: johnnyresult.id.toString(),
+        username: sarahresult.username,
       });
 
       expect(result.isRight()).toBeTruthy();
@@ -68,22 +68,22 @@ describe('Follow User', () => {
     await createUserUseCase.execute(johnny);
     await createUserUseCase.execute(sarah);
 
-    const user1Result = await inMemoryUsersRepository.findByUsername(
+    const johnnyresult = await inMemoryUsersRepository.findByUsername(
       johnny.username,
     );
-    const user2Result = await inMemoryUsersRepository.findByUsername(
+    const sarahresult = await inMemoryUsersRepository.findByUsername(
       sarah.username,
     );
 
-    if (user1Result && user2Result) {
+    if (johnnyresult && sarahresult) {
       await followUserUseCase.execute({
-        followerId: user1Result.id.toString(),
-        followedId: user2Result.id.toString(),
+        followerId: johnnyresult.id.toString(),
+        username: sarahresult.username,
       });
 
       const result2 = await followUserUseCase.execute({
-        followerId: user1Result.id.toString(),
-        followedId: user2Result.id.toString(),
+        followerId: johnnyresult.id.toString(),
+        username: sarahresult.username,
       });
       console.log(result2);
       expect(result2.isLeft()).toBeTruthy();
@@ -99,7 +99,7 @@ describe('Follow User', () => {
 
     const result = await followUserUseCase.execute({
       followerId: johnny.id.toString(),
-      followedId: 'non-existent-user-id',
+      username: 'non-existent-user-username',
     });
 
     expect(result.isLeft()).toBeTruthy();
