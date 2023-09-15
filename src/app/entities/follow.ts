@@ -3,7 +3,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 
 export interface FollowProps {
   followerId: string;
-  followingId: string;
+  followedId: string;
   createdAt: Date;
 }
 
@@ -12,8 +12,8 @@ export class Follow extends Entity<FollowProps> {
     return this.props.followerId;
   }
 
-  get followingId(): string {
-    return this.props.followingId;
+  get followedId(): string {
+    return this.props.followedId;
   }
 
   get createdAt(): Date {

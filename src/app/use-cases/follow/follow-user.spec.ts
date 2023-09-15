@@ -51,7 +51,7 @@ describe('Follow User', () => {
     if (user1Result && user2Result) {
       const result = await followUserUseCase.execute({
         followerId: user1Result.id.toString(),
-        followingId: user2Result.id.toString(),
+        followedId: user2Result.id.toString(),
       });
 
       expect(result.isRight()).toBeTruthy();
@@ -78,14 +78,14 @@ describe('Follow User', () => {
     if (user1Result && user2Result) {
       await followUserUseCase.execute({
         followerId: user1Result.id.toString(),
-        followingId: user2Result.id.toString(),
+        followedId: user2Result.id.toString(),
       });
 
       const result2 = await followUserUseCase.execute({
         followerId: user1Result.id.toString(),
-        followingId: user2Result.id.toString(),
+        followedId: user2Result.id.toString(),
       });
-
+      console.log(result2);
       expect(result2.isLeft()).toBeTruthy();
       expect(result2.value).toBeInstanceOf(AlreadyFollowUserError);
     } else {
@@ -99,7 +99,7 @@ describe('Follow User', () => {
 
     const result = await followUserUseCase.execute({
       followerId: johnny.id.toString(),
-      followingId: 'non-existent-user-id',
+      followedId: 'non-existent-user-id',
     });
 
     expect(result.isLeft()).toBeTruthy();

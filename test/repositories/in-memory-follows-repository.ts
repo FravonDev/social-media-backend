@@ -6,11 +6,11 @@ export class InMemoryFollowsRepository implements FollowsRepository {
 
   async findByUserIds(
     followerId: string,
-    followingId: string,
+    followedId: string,
   ): Promise<Follow | null> {
     const follow = this.follows.find(
       (item) =>
-        item.followerId === followerId && item.followingId === followingId,
+        item.followerId === followerId && item.followedId === followedId,
     );
     if (!follow) {
       return null;
