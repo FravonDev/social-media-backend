@@ -4,6 +4,7 @@ import {
   ConflictException,
   Controller,
   HttpCode,
+  NotFoundException,
   Post,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -12,6 +13,7 @@ import { FollowUserBody } from './dtos/follow-body';
 import { UserPayload } from '@/infra/auth/jwt.strategy';
 import { CurrentUser } from '@/infra/auth/current-user-decorator';
 import { AlreadyFollowUserError } from '@/app/use-cases/follow/errors/already-follow';
+import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
 
 @Controller('follow')
 export class FollowUserController {
@@ -35,6 +37,8 @@ export class FollowUserController {
       switch (error.constructor) {
         case AlreadyFollowUserError:
           throw new ConflictException(error.message);
+        case UserNotFoundError:
+          throw new NotFoundException(error.message);
         default:
           throw new BadRequestException(error.message);
       }

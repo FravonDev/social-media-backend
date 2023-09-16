@@ -76,4 +76,24 @@ describe('Follow user (E2E)', () => {
     expect(responseFollow.statusCode).toBe(409);
     expect(responseFollow.body.message).toEqual('Already following this user.');
   });
+
+  test('[POST] /follow - User not found', async () => {
+    const user = await prisma.user.findFirst({
+      where: {
+        username: 'johndoe',
+      },
+    });
+    if (!user) {
+      fail('Current User not found.');
+    }
+
+    const access_token = jwt.sign({ sub: user.id });
+
+    const responseFollow = await request(app.getHttpServer())
+      .post('/follow')
+      .set('Authorization', `Bearer ${access_token}`)
+      .send({ username: 'nonexistingusername' });
+    expect(responseFollow.statusCode).toBe(404);
+    expect(responseFollow.body.message).toEqual('User not found.');
+  });
 });
