@@ -4,6 +4,12 @@ import { FollowsRepository } from '@/app/repositories/follows-repository';
 export class InMemoryFollowsRepository implements FollowsRepository {
   follows: Follow[] = [];
 
+  async delete(follow: Follow): Promise<void> {
+    const index = this.follows.findIndex((item) => item.id === follow.id);
+    await this.follows.splice(index, 1);
+    return;
+  }
+
   async findByUserIds(
     followerId: string,
     followedId: string,

@@ -7,6 +7,17 @@ import { PrismaFollowMapper } from '../mappers/prisma-follows-mapper';
 @Injectable()
 export class PrismaFollowsRepository implements FollowsRepository {
   constructor(private prisma: PrismaService) {}
+
+  async delete(follow: Follow): Promise<void> {
+    await this.prisma.follow.delete({
+      where: {
+        id: follow.id.toString(),
+      },
+    });
+
+    return;
+  }
+
   async findByUserIds(
     followerId: string,
     followedId: string,
@@ -22,6 +33,7 @@ export class PrismaFollowsRepository implements FollowsRepository {
     }
     return PrismaFollowMapper.toDomain(follow);
   }
+
   async create(follow: Follow): Promise<void> {
     const data = PrismaFollowMapper.toPrisma(follow);
     await this.prisma.follow.create({

@@ -6,4 +6,5 @@ export abstract class FollowsRepository {
     followedId: string,
   ): Promise<Follow | null>;
   abstract create(follow: Follow): Promise<void>;
+  abstract delete(follow: Follow): Promise<void>;
 }
