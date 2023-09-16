@@ -10,6 +10,8 @@ import { AuthenticateController } from './controllers/authenticate.controller';
 import { AuthenticateUserUseCase } from '@/app/use-cases/auth/authenticate-user';
 import { FollowUserUseCase } from '@/app/use-cases/follow/follow-user';
 import { FollowUserController } from './controllers/follow-user.controller';
+import { UnfollowUserController } from './controllers/unfollow-user.controller';
+import { UnfollowUserUseCase } from '@/app/use-cases/follow/unfollow-user';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -17,6 +19,7 @@ import { FollowUserController } from './controllers/follow-user.controller';
     CreateAccountController,
     AuthenticateController,
     FollowUserController,
+    UnfollowUserController,
   ],
   providers: [
     /*
@@ -26,6 +29,7 @@ import { FollowUserController } from './controllers/follow-user.controller';
     CreateUserUseCase,
     AuthenticateUserUseCase,
     FollowUserUseCase,
+    UnfollowUserUseCase,
   ],
 })
 export class HttpModule {}
