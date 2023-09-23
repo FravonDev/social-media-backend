@@ -12,9 +12,10 @@ import { FollowUserUseCase } from '@/app/use-cases/follow/follow-user';
 import { FollowUserController } from './controllers/follow-user.controller';
 import { UnfollowUserController } from './controllers/unfollow-user.controller';
 import { UnfollowUserUseCase } from '@/app/use-cases/follow/unfollow-user';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule],
+  imports: [DatabaseModule, CryptographyModule, MailModule],
   controllers: [
     CreateAccountController,
     AuthenticateController,

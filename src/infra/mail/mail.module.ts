@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
-import { NodemailerMailService } from './nodemail.service';
+import { MailerTrapService } from './mailer/mailer.service';
+import { MailerDispatcherModule } from './mailer/mailer.module';
 
 @Module({
-  imports: [],
+  imports: [MailerDispatcherModule],
   providers: [
     {
       provide: MailService,
-      useClass: NodemailerMailService,
+      useClass: MailerTrapService,
     },
   ],
   exports: [MailService],

@@ -1,5 +1,7 @@
 export interface MailRequest {
   to: string;
   subject: string;
-  text: string;
+  template?: string;
+  html?: string;
+  context?: any;
 }
