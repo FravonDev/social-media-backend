@@ -20,6 +20,7 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.9.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^3.0.1",
     "@nestjs/core": "^9.0.0",
@@ -58,6 +59,7 @@
     "@types/jest": "29.5.1",
     "@types/multer": "^1.4.7",
     "@types/node": "18.16.12",
+    "@types/nodemailer": "^6.4.10",
     "@types/passport-jwt": "^3.0.8",
     "@types/passport-local": "^1.0.35",
     "@types/sharp": "^0.32.0",
