@@ -22,6 +22,7 @@ model User {
   name            String
   photo           String?
   bio             String?
+  token           String?   @default(uuid())
   createdAt       DateTime  @default(now())
   updatedAt       DateTime?
   deletedAt       DateTime?

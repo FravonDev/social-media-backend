@@ -1,4 +1,3 @@
-import exp from 'constants';
 import { User, UserProps } from './user';
 
 describe('User Entity', () => {
@@ -9,7 +8,6 @@ describe('User Entity', () => {
     name: 'John Doe',
     photo: null,
     bio: null,
-    token: null,
     createdAt: new Date(),
     updatedAt: null,
     deletedAt: null,
@@ -53,5 +51,13 @@ describe('User Entity', () => {
     user.deleteUser();
 
     expect(user.deletedAt).toBeInstanceOf(Date);
+  });
+
+  it('should set emailConfirmedAt', () => {
+    const user = User.create(initialUserData);
+
+    user.confirmAccount();
+
+    expect(user.emailVerifiedAt).toBeInstanceOf(Date);
   });
 });

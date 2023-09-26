@@ -40,6 +40,9 @@ export class User extends Entity<UserProps> {
     return this.props.username;
   }
 
+  public get token(): string | null | undefined {
+    return this.props.token;
+  }
   get createdAt(): Date {
     return this.props.createdAt;
   }
@@ -60,6 +63,11 @@ export class User extends Entity<UserProps> {
     this.props.updatedAt = new Date();
   }
 
+  confirmAccount() {
+    this.props.token = null;
+    this.props.emailVerifiedAt = new Date();
+  }
+
   updateUser(newProps: Partial<UserProps>) {
     this.props = { ...this.props, ...newProps };
     this.touch();
@@ -70,6 +78,9 @@ export class User extends Entity<UserProps> {
   }
 
   static create(props: UserProps, id?: UniqueEntityID) {
+    if (props.token === undefined) {
+      props.token = new UniqueEntityID().toString();
+    }
     const user = new User(props, id);
 
     return user;
