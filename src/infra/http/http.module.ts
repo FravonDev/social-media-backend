@@ -13,6 +13,8 @@ import { FollowUserController } from './controllers/follow-user.controller';
 import { UnfollowUserController } from './controllers/unfollow-user.controller';
 import { UnfollowUserUseCase } from '@/app/use-cases/follow/unfollow-user';
 import { MailModule } from '../mail/mail.module';
+import { ConfirmAccountController } from './controllers/confirm-account.controller';
+import { ConfirmAccountUseCase } from '@/app/use-cases/user/confirm-account';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, MailModule],
@@ -21,6 +23,7 @@ import { MailModule } from '../mail/mail.module';
     AuthenticateController,
     FollowUserController,
     UnfollowUserController,
+    ConfirmAccountController,
   ],
   providers: [
     /*
@@ -31,6 +34,7 @@ import { MailModule } from '../mail/mail.module';
     AuthenticateUserUseCase,
     FollowUserUseCase,
     UnfollowUserUseCase,
+    ConfirmAccountUseCase,
   ],
 })
 export class HttpModule {}

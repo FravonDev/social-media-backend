@@ -6,6 +6,7 @@ import { UsersRepository } from '@/app/repositories/users-repository';
 import { EmailAlreadyExistsError } from './errors/email-already-exists';
 import { HashGenerator } from '@/app/cryptography/hash-generator';
 import { MailService } from '@/infra/mail/mail.service';
+import { EnvService } from '@/infra/env/env.service';
 
 export interface CreateUserUseCaseRequest {
   email: string;
@@ -29,6 +30,7 @@ export class CreateUserUseCase {
     private UsersRepository: UsersRepository,
     private hashGenerator: HashGenerator,
     private mailService: MailService,
+    private envService: EnvService,
   ) {}
   async execute({
     email,
@@ -76,7 +78,7 @@ export class CreateUserUseCase {
       context: {
         name,
         username,
-        confirmationUrl: `http://localhost:3000/confirm-email/${token}`,
+        confirmationUrl: `${process.env.BASE_URL}/accounts/confirm?token=${token}`,
       },
     });
 

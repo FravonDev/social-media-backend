@@ -7,6 +7,7 @@ export const envSchema = z.object({
   PORT: z.coerce.number().optional().default(3333),
   USER_MAIL: z.string().email(),
   USER_MAIL_PASSWORD: z.string(),
+  BASE_URL: z.string().url(),
 });
 
 export type Env = z.infer<typeof envSchema>;
