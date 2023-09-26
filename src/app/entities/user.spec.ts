@@ -9,6 +9,7 @@ describe('User Entity', () => {
     name: 'John Doe',
     photo: null,
     bio: null,
+    token: null,
     createdAt: new Date(),
     updatedAt: null,
     deletedAt: null,
@@ -24,6 +25,7 @@ describe('User Entity', () => {
     expect(user.name).toEqual(initialUserData.name);
     expect(user.photo).toEqual(initialUserData.photo);
     expect(user.bio).toEqual(initialUserData.bio);
+    expect(user.token).toEqual(initialUserData.token);
     expect(user.createdAt).toEqual(expect.any(Date));
     expect(user.updatedAt).toEqual(initialUserData.updatedAt);
     expect(user.deletedAt).toEqual(initialUserData.deletedAt);

@@ -8,6 +8,7 @@ export interface UserProps {
   name: string;
   photo: string | null;
   bio: string | null;
+  token?: string | null;
   createdAt: Date;
   updatedAt?: Date | null;
   deletedAt?: Date | null;
