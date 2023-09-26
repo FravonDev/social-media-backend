@@ -5,6 +5,8 @@ import { User } from '@/app/entities/user';
 import { UsersRepository } from '@/app/repositories/users-repository';
 import { EmailAlreadyExistsError } from './errors/email-already-exists';
 import { HashGenerator } from '@/app/cryptography/hash-generator';
+import { MailService } from '@/infra/mail/mail.service';
+
 export interface CreateUserUseCaseRequest {
   email: string;
   password: string;
@@ -26,6 +28,7 @@ export class CreateUserUseCase {
   constructor(
     private UsersRepository: UsersRepository,
     private hashGenerator: HashGenerator,
+    private mailService: MailService,
   ) {}
   async execute({
     email,
@@ -51,7 +54,6 @@ export class CreateUserUseCase {
 
     const hashedPassword = await this.hashGenerator.hash(password);
 
-    //TODO: generate hash password
     const user = User.create({
       email,
       password: hashedPassword,
@@ -64,6 +66,19 @@ export class CreateUserUseCase {
     });
 
     await this.UsersRepository.create(user);
+
+    const token = user.token;
+
+    await this.mailService.sendMail({
+      to: email,
+      subject: 'Social Media - Confirm your email',
+      template: 'user-created',
+      context: {
+        name,
+        username,
+        confirmationUrl: `http://localhost:3000/confirm-email/${token}`,
+      },
+    });
 
     return right({
       user,
