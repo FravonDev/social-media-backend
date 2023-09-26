@@ -6,12 +6,14 @@ import { CreateUserUseCase } from '../user/create-user';
 import { FakeHasher } from '@test/cryptography/fake-hasher';
 import { UnfollowUserUseCase } from './unfollow-user';
 import { NotFollowUserError } from './errors/not-following';
+import { FakeMailService } from '@test/services/fake-mail.service';
 
 describe('Unfollow User', () => {
   let inMemoryFollowsRepository: InMemoryFollowsRepository;
   let inMemoryUsersRepository: InMemoryUsersRepository;
 
   let fakeHasher: FakeHasher;
+  let mailService: FakeMailService;
 
   let followUserUseCase: FollowUserUseCase;
   let unfollowUserUseCase: UnfollowUserUseCase;
@@ -20,12 +22,14 @@ describe('Unfollow User', () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeHasher = new FakeHasher();
+    mailService = new FakeMailService();
 
     inMemoryFollowsRepository = new InMemoryFollowsRepository();
 
     createUserUseCase = new CreateUserUseCase(
       inMemoryUsersRepository,
       fakeHasher,
+      mailService,
     );
 
     followUserUseCase = new FollowUserUseCase(

@@ -3,19 +3,23 @@ import { CreateUserUseCase } from './create-user';
 import { FakeHasher } from '@test/cryptography/fake-hasher';
 import { EmailAlreadyExistsError } from './errors/email-already-exists';
 import { UsernameAlreadyExistsError } from './errors/username-already-exists';
+import { FakeMailService } from '@test/services/fake-mail.service';
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeHasher: FakeHasher;
 let createUserUseCase: CreateUserUseCase;
+let mailService: FakeMailService;
 
 describe('create User', () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeHasher = new FakeHasher();
+    mailService = new FakeMailService();
 
     createUserUseCase = new CreateUserUseCase(
       inMemoryUsersRepository,
       fakeHasher,
+      mailService,
     );
   });
 

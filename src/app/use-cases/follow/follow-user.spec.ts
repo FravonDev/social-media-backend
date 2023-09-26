@@ -7,12 +7,14 @@ import { FakeHasher } from '@test/cryptography/fake-hasher';
 import { Follow } from '@/app/entities/follow';
 import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
 import { AlreadyFollowUserError } from './errors/already-follow';
+import { FakeMailService } from '@test/services/fake-mail.service';
 
 describe('Follow User', () => {
   let inMemoryFollowsRepository: InMemoryFollowsRepository;
   let inMemoryUsersRepository: InMemoryUsersRepository;
 
   let fakeHasher: FakeHasher;
+  let mailService: FakeMailService;
 
   let followUserUseCase: FollowUserUseCase;
   let createUserUseCase: CreateUserUseCase;
@@ -20,12 +22,14 @@ describe('Follow User', () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeHasher = new FakeHasher();
+    mailService = new FakeMailService();
 
     inMemoryFollowsRepository = new InMemoryFollowsRepository();
 
     createUserUseCase = new CreateUserUseCase(
       inMemoryUsersRepository,
       fakeHasher,
+      mailService,
     );
 
     followUserUseCase = new FollowUserUseCase(
