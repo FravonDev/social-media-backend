@@ -34,6 +34,7 @@ describe('Unfollow user (E2E)', () => {
         name: 'John D.',
         photo: null,
         bio: null,
+        emailVerifiedAt: new Date(),
       },
     });
     const access_token = jwt.sign({ sub: john.id });
@@ -46,6 +47,7 @@ describe('Unfollow user (E2E)', () => {
         name: 'sarah S.',
         photo: null,
         bio: null,
+        emailVerifiedAt: new Date(),
       },
     });
 

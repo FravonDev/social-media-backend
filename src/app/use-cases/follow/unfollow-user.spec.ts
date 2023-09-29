@@ -44,11 +44,11 @@ describe('Unfollow User', () => {
   });
 
   it('should be able to unfollow a user', async () => {
-    const johnny = makeUser({ name: 'Johnny J.' });
-    const sarah = makeUser({ name: 'Sarah S.' });
+    const johnny = makeUser({ name: 'Johnny J.', emailVerifiedAt: new Date() });
+    const sarah = makeUser({ name: 'Sarah S.', emailVerifiedAt: new Date() });
 
-    await createUserUseCase.execute(johnny);
-    await createUserUseCase.execute(sarah);
+    await inMemoryUsersRepository.users.push(johnny);
+    await inMemoryUsersRepository.users.push(sarah);
 
     const johnnyresult = await inMemoryUsersRepository.findByUsername(
       johnny.username,
@@ -77,11 +77,11 @@ describe('Unfollow User', () => {
   });
 
   it('should throw NotFollowError when trying to unfollow a user that is not being followed', async () => {
-    const johnny = makeUser({ name: 'Johnny J.' });
-    const sarah = makeUser({ name: 'Sarah S.' });
+    const johnny = makeUser({ name: 'Johnny J.', emailVerifiedAt: new Date() });
+    const sarah = makeUser({ name: 'Sarah S.', emailVerifiedAt: new Date() });
 
-    await createUserUseCase.execute(johnny);
-    await createUserUseCase.execute(sarah);
+    await inMemoryUsersRepository.users.push(johnny);
+    await inMemoryUsersRepository.users.push(sarah);
 
     const johnnyresult = await inMemoryUsersRepository.findByUsername(
       johnny.username,

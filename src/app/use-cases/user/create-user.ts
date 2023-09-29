@@ -30,7 +30,6 @@ export class CreateUserUseCase {
     private UsersRepository: UsersRepository,
     private hashGenerator: HashGenerator,
     private mailService: MailService,
-    private envService: EnvService,
   ) {}
   async execute({
     email,

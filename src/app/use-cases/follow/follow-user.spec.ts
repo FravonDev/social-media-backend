@@ -39,11 +39,11 @@ describe('Follow User', () => {
   });
 
   it('should be able to follow a user', async () => {
-    const johnny = makeUser({ name: 'Johnny J.' });
-    const sarah = makeUser({ name: 'Sarah S.' });
+    const johnny = makeUser({ name: 'Johnny J.', emailVerifiedAt: new Date() });
+    const sarah = makeUser({ name: 'Sarah S.', emailVerifiedAt: new Date() });
 
-    await createUserUseCase.execute(johnny);
-    await createUserUseCase.execute(sarah);
+    await inMemoryUsersRepository.users.push(johnny);
+    await inMemoryUsersRepository.users.push(sarah);
 
     const johnnyresult = await inMemoryUsersRepository.findByUsername(
       johnny.username,
@@ -57,7 +57,6 @@ describe('Follow User', () => {
         followerId: johnnyresult.id.toString(),
         username: sarahresult.username,
       });
-
       expect(result.isRight()).toBeTruthy();
       expect(result.value).toBeInstanceOf(Follow);
     } else {
@@ -66,11 +65,11 @@ describe('Follow User', () => {
   });
 
   it('should throw AlreadyFollowUserError when trying to follow a user that is already followed', async () => {
-    const johnny = makeUser({ name: 'Johnny J.' });
-    const sarah = makeUser({ name: 'Sarah S.' });
+    const johnny = makeUser({ name: 'Johnny J.', emailVerifiedAt: new Date() });
+    const sarah = makeUser({ name: 'Sarah S.', emailVerifiedAt: new Date() });
 
-    await createUserUseCase.execute(johnny);
-    await createUserUseCase.execute(sarah);
+    await inMemoryUsersRepository.users.push(johnny);
+    await inMemoryUsersRepository.users.push(sarah);
 
     const johnnyresult = await inMemoryUsersRepository.findByUsername(
       johnny.username,

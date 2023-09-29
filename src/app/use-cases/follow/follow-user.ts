@@ -27,7 +27,7 @@ export class FollowUserUseCase {
     followerId,
     username,
   }: FollowUserUseCaseRequest): Promise<FollowUsertUseCaseResponse> {
-    const user = await this.usersRepository.findByUsername(username);
+    const user = await this.usersRepository.findConfirmedByUsername(username);
 
     if (!user) {
       return left(new UserNotFoundError());
