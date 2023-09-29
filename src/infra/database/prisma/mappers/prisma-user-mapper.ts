@@ -1,6 +1,6 @@
 import { User as PrismaUser, Prisma } from '@prisma/client';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
-import { User } from '@/app/entities/user';
+import { User, UserSummary } from '@/app/entities/user';
 
 export class PrismaUserMapper {
   static toDomain(raw: PrismaUser): User {
@@ -36,6 +36,15 @@ export class PrismaUserMapper {
       updatedAt: user.updatedAt,
       deletedAt: user.deletedAt,
       emailVerifiedAt: user.emailVerifiedAt,
+    };
+  }
+
+  static toDomainSummary(raw: PrismaUser): UserSummary {
+    return {
+      id: raw.id,
+      username: raw.username,
+      name: raw.name,
+      photo: raw.photo,
     };
   }
 }

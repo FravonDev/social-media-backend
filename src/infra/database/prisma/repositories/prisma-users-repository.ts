@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { PrismaUserMapper } from '../mappers/prisma-user-mapper';
 import { UsersRepository } from '@/app/repositories/users-repository';
 import { User } from '@/app/entities/user';
+import { User as PrismaUser, Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaUsersRepository implements UsersRepository {
@@ -62,6 +63,26 @@ export class PrismaUsersRepository implements UsersRepository {
     }
 
     return PrismaUserMapper.toDomain(user);
+  }
+
+  async findManyUsersWithPagination(
+    query: string,
+    offset: number,
+    limit: number,
+  ) {
+    const queryResults: PrismaUser[] = await this.prisma.$queryRaw(Prisma.sql`
+    SELECT user
+    FROM "User"
+    WHERE LOWER("username") LIKE LOWER(${`%${query}%`})
+    OR LOWER("name") LIKE ${`%${query}%`}
+    ORDER BY "username" ASC
+    OFFSET ${offset}
+    LIMIT ${limit};
+    `);
+
+    const results = queryResults.map(PrismaUserMapper.toDomainSummary);
+
+    return results;
   }
 
   async findConfirmedById(id: string): Promise<User | null> {

@@ -1,4 +1,4 @@
-import { User } from '@/app/entities/user';
+import { User, UserSummary } from '@/app/entities/user';
 import { UsersRepository } from '@/app/repositories/users-repository';
 
 export class InMemoryUsersRepository implements UsersRepository {
@@ -34,6 +34,24 @@ export class InMemoryUsersRepository implements UsersRepository {
       return null;
     }
     return user;
+  }
+
+  async findManyUsersWithPagination(
+    query: string,
+    offset: number,
+    limit: number,
+  ): Promise<UserSummary[]> {
+    const filteredUsers = this.users.filter(
+      (user) =>
+        user.username.toLowerCase().includes(query.toLowerCase()) ||
+        user.name.toLowerCase().includes(query.toLowerCase()),
+    );
+
+    const paginatedUsers = filteredUsers.slice(offset, offset + limit);
+
+    const usersSummary = paginatedUsers.map((user) => user.getSummary());
+
+    return usersSummary;
   }
 
   async findConfirmedById(id: string): Promise<User | null> {

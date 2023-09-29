@@ -60,4 +60,17 @@ describe('User Entity', () => {
 
     expect(user.emailVerifiedAt).toBeInstanceOf(Date);
   });
+
+  it('should return a summary', () => {
+    const user = User.create(initialUserData);
+
+    const summary = user.getSummary();
+
+    expect(summary).toEqual({
+      id: user.id.toString(),
+      username: user.username,
+      name: user.name,
+      photo: user.photo,
+    });
+  });
 });
