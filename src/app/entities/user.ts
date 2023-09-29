@@ -14,6 +14,11 @@ export interface UserProps {
   deletedAt?: Date | null;
   emailVerifiedAt: Date | null;
 }
+export interface UserSummary {
+  username: string;
+  name: string;
+  photo: string | null;
+}
 
 export class User extends Entity<UserProps> {
   get name(): string {
@@ -61,6 +66,13 @@ export class User extends Entity<UserProps> {
 
   private touch() {
     this.props.updatedAt = new Date();
+  }
+  getSummary(): UserSummary {
+    return {
+      username: this.username,
+      name: this.name,
+      photo: this.photo,
+    };
   }
 
   confirmAccount() {
