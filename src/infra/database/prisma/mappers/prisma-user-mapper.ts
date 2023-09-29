@@ -41,6 +41,7 @@ export class PrismaUserMapper {
 
   static toDomainSummary(raw: PrismaUser): UserSummary {
     return {
+      id: raw.id,
       username: raw.username,
       name: raw.name,
       photo: raw.photo,
