@@ -67,6 +67,7 @@ describe('User Entity', () => {
     const summary = user.getSummary();
 
     expect(summary).toEqual({
+      id: user.id.toString(),
       username: user.username,
       name: user.name,
       photo: user.photo,

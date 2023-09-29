@@ -15,6 +15,7 @@ export interface UserProps {
   emailVerifiedAt: Date | null;
 }
 export interface UserSummary {
+  id: string;
   username: string;
   name: string;
   photo: string | null;
@@ -69,6 +70,7 @@ export class User extends Entity<UserProps> {
   }
   getSummary(): UserSummary {
     return {
+      id: this.id.toString(),
       username: this.username,
       name: this.name,
       photo: this.photo,
