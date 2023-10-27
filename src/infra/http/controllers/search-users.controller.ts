@@ -28,5 +28,6 @@ export class SearchUsersController {
       offset,
       limit,
     });
+    return result;
   }
 }

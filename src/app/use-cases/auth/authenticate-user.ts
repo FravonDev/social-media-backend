@@ -13,6 +13,10 @@ interface AuthenticateUserUseCaseRequest {
 type AuthenticateUserUseCaseResponse = Either<
   WrongCredentialsError,
   {
+    id: string;
+    name: string;
+    username: string;
+    photo: string | null;
     accessToken: string;
   }
 >;
@@ -49,6 +53,10 @@ export class AuthenticateUserUseCase {
     });
 
     return right({
+      id: user.id.toString(),
+      name: user.name,
+      username: user.username,
+      photo: user.photo || null,
       accessToken,
     });
   }

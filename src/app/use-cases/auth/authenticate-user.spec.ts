@@ -39,6 +39,10 @@ describe('Authenticate User', () => {
 
     expect(result.isRight()).toBe(true);
     expect(result.value).toEqual({
+      id: user.id.toString(),
+      name: user.name,
+      username: user.username,
+      photo: user.photo,
       accessToken: expect.any(String),
     });
   });
