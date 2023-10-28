@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/FravonDev/social-media/assets/62142146/46b1c3c0-e413-4e49-99ed-9f27266fb336" width="200" alt="Social Media Logo" />
+  <img src="https://raw.githubusercontent.com/FravonDev/social-media-frontend/develop/src/assets/logo.png" width="200" alt="Social Media Logo" />
 </p>
 <br>
 <p align="center">
@@ -74,15 +74,12 @@ To explore the API endpoints and their documentation, you should run the server 
 **Description:** Clients should listen for this event after establishing the connection. The server will send the last message of each chat as a preview.
 
 **Usage:**
+
 ```javascript
-
 socket.on('getPreviewMessages', (previewMessages) => {
-
   console.log(previewMessages);
-  
 });
 ```
-
 
 <br>
 
@@ -93,6 +90,7 @@ socket.on('getPreviewMessages', (previewMessages) => {
 **Description:** Clients can use this event to send messages to other users.
 
 **Usage:**
+
 ```javascript
 // Emit the sendMessage event
 socket.emit('sendMessage', {
@@ -105,21 +103,20 @@ socket.emit('sendMessage', {
 
 #### getMessage (listen)
 
-
 **Event:** `getMessage`
 
-
-**Description:**  The recipient of the message should listen for this event to receive messages sent to them.
+**Description:** The recipient of the message should listen for this event to receive messages sent to them.
 
 **Usage:**
+
 ```javascript
 // Listen for the getMessage event
 socket.on('getMessage', (message) => {
   // Handle received message
   console.log(message);
 });
-
 ```
+
 <br>
 
 #### getChatMessages (emit)
@@ -129,6 +126,7 @@ socket.on('getMessage', (message) => {
 **Description:** Clients can emit this event to request messages from a specific chat with another user.
 
 **Usage:**
+
 ```javascript
 // Emit the getChatMessages event
 socket.emit('getChatMessages', {
@@ -136,26 +134,26 @@ socket.emit('getChatMessages', {
   offset: 0,
   limit: 20,
 });
-
 ```
+
 <br>
 
 #### receiveChatMessages (listen)
-
 
 **Event:** `receiveChatMessages`
 
 **Description:** Listen for this event to receive messages from a specific chat.
 
 **Usage:**
+
 ```javascript
 // Listen for the receiveChatMessages event
 socket.on('receiveChatMessages', (chatMessages) => {
   // Handle received chatMessages
   console.log(chatMessages);
 });
-
 ```
+
 <br>
 
 #### typing (emit)
@@ -165,29 +163,28 @@ socket.on('receiveChatMessages', (chatMessages) => {
 **Description:** Emit this event to notify other users that you are currently typing a message.
 
 **Usage:**
+
 ```javascript
 // Emit the typing event
 socket.emit('typing', { recipientId: 'f85b935e-87d0-4b4b-86b1-b51084454f6a' });
-
 ```
 
 <br>
 
 #### isTyping (listen)
 
-
 **Event:** `isTyping`
 
 **Description:** Listen for this event to receive information about whether someone is currently typing a message in your chat.
 
 **Usage:**
+
 ```javascript
 // Listen for the isTyping event
 socket.on('isTyping', (isTyping) => {
-    // Handle isTyping
-    console.log(isTyping);
+  // Handle isTyping
+  console.log(isTyping);
 });
-
 ```
 
 ## Stay Connected
