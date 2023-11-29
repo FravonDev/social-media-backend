@@ -17,6 +17,8 @@ import { ConfirmAccountController } from './controllers/confirm-account.controll
 import { ConfirmAccountUseCase } from '@/app/use-cases/user/confirm-account';
 import { SearchUsersController } from './controllers/search-users.controller';
 import { SearchUsersUseCase } from '@/app/use-cases/search/search-user';
+import { CheckUsernameAvailabilityUseCase } from '@/app/use-cases/user/check-username-availability';
+import { CheckUsernameAvailabilityController } from './controllers/check-username-availability.controller';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, MailModule],
@@ -27,6 +29,7 @@ import { SearchUsersUseCase } from '@/app/use-cases/search/search-user';
     UnfollowUserController,
     ConfirmAccountController,
     SearchUsersController,
+    CheckUsernameAvailabilityController
   ],
   providers: [
     /*
@@ -39,6 +42,7 @@ import { SearchUsersUseCase } from '@/app/use-cases/search/search-user';
     UnfollowUserUseCase,
     ConfirmAccountUseCase,
     SearchUsersUseCase,
+    CheckUsernameAvailabilityUseCase
   ],
 })
 export class HttpModule {}
