@@ -3,15 +3,27 @@ import { NotificationsRepository } from '@/notification/application/repositories
 import { Notification } from '@/notification/enterprise/entities/notification';
 
 export class InMemoryNotificationsRepository implements NotificationsRepository {
-  findById(id: string): Promise<Notification | null> {
-      throw new Error('Method not implemented.');
-  }
-  save(notification: Notification): Promise<void> {
-      throw new Error('Method not implemented.');
-  }
-  items: Notification[] = []; 
+  public items: Notification[] = []
 
-  async create(follow: Notification): Promise<void> {
-    await this.items.push(follow);
+  async findById(id: string) {
+    const notification = this.items.find((item) => item.id.toString() === id)
+
+    if (!notification) {
+      return null
+    }
+
+    return notification
+  }
+
+  async create(notification: Notification) {
+    this.items.push(notification)
+  }
+
+  async save(notification: Notification) {
+    const itemIndex = this.items.findIndex(
+      (item) => item.id === notification.id,
+    )
+
+    this.items[itemIndex] = notification
   }
 }
