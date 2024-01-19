@@ -1,5 +1,7 @@
+import { AggregateRoot } from '@/core/entities/aggregate-root';
 import { Entity } from '@/core/entities/entity';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
+import { UserCreatedEvent } from '../events/user-created-event';
 
 export interface UserProps {
   email: string;
@@ -21,7 +23,7 @@ export interface UserSummary {
   photo: string | null;
 }
 
-export class User extends Entity<UserProps> {
+export class User extends AggregateRoot<UserProps> {
   get name(): string {
     return this.props.name;
   }
@@ -96,7 +98,10 @@ export class User extends Entity<UserProps> {
       props.token = new UniqueEntityID().toString();
     }
     const user = new User(props, id);
-
+    const isNewUser = !!id;
+    if (isNewUser) {
+      user.addDomainEvent(new UserCreatedEvent(user));
+    }
     return user;
   }
 }
