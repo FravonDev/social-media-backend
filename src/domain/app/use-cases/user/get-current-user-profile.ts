@@ -1,7 +1,7 @@
 import { Either, left, right } from '@/core/either';
 import { Injectable } from '@nestjs/common';
-import { UsersRepository } from '@/app/repositories/users-repository';
-import { UserSummary } from '@/app/entities/user';
+import { UsersRepository } from '@/domain/app/repositories/users-repository';
+import { UserSummary } from '@/domain/app/entities/user';
 import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
 
 interface GetCurrentUserProfileUseCaseRequest {

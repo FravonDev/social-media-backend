@@ -8,9 +8,9 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateAccountBody } from './dtos/create-account-body';
-import { CreateUserUseCase } from '@/app/use-cases/user/create-user';
-import { UsernameAlreadyExistsError } from '@/app/use-cases/user/errors/username-already-exists';
-import { EmailAlreadyExistsError } from '@/app/use-cases/user/errors/email-already-exists';
+import { CreateUserUseCase } from '@/domain/app/use-cases/user/create-user';
+import { UsernameAlreadyExistsError } from '@/domain/app/use-cases/user/errors/username-already-exists';
+import { EmailAlreadyExistsError } from '@/domain/app/use-cases/user/errors/email-already-exists';
 import { Public } from '@/infra/auth/public';
 
 @Controller('/accounts/register')

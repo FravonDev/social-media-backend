@@ -1,5 +1,6 @@
-import { User, UserSummary } from '@/app/entities/user';
-import { UsersRepository } from '@/app/repositories/users-repository';
+import { DomainEvents } from '@/core/events/domain-events';
+import { User, UserSummary } from '@/domain/app/entities/user';
+import { UsersRepository } from '@/domain/app/repositories/users-repository';
 
 export class InMemoryUsersRepository implements UsersRepository {
   public users: User[] = [];
@@ -86,10 +87,14 @@ export class InMemoryUsersRepository implements UsersRepository {
 
   async create(user: User): Promise<void> {
     this.users.push(user);
+
+    DomainEvents.dispatchEventsForAggregate(user.id);
   }
 
   async save(user: User): Promise<void> {
     const index = this.users.findIndex((item) => item.id === user.id);
     this.users[index] = user;
+
+    DomainEvents.dispatchEventsForAggregate(user.id);
   }
 }

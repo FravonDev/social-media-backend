@@ -1,10 +1,10 @@
 import { Either, left, right } from '@/core/either';
 import { AlreadyFollowUserError } from './errors/already-follow';
-import { UserNotFoundError } from '../../../core/errors/shared/user-not-found';
 import { Injectable } from '@nestjs/common';
-import { UsersRepository } from '@/app/repositories/users-repository';
-import { FollowsRepository } from '@/app/repositories/follows-repository';
-import { Follow } from '@/app/entities/follow';
+import { UsersRepository } from '@/domain/app/repositories/users-repository';
+import { FollowsRepository } from '@/domain/app/repositories/follows-repository';
+import { Follow } from '@/domain/app/entities/follow';
+import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
 
 interface FollowUserUseCaseRequest {
   followerId: string;

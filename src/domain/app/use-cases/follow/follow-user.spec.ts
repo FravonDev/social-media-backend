@@ -4,7 +4,7 @@ import { InMemoryFollowsRepository } from '@test/repositories/in-memory-follows-
 import { makeUser } from '@test/factories/make-user';
 import { CreateUserUseCase } from '../user/create-user';
 import { FakeHasher } from '@test/cryptography/fake-hasher';
-import { Follow } from '@/app/entities/follow';
+import { Follow } from '@/domain/app/entities/follow';
 import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
 import { AlreadyFollowUserError } from './errors/already-follow';
 import { FakeMailService } from '@test/services/fake-mail.service';

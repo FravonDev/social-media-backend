@@ -1,5 +1,5 @@
-import { Follow } from '@/app/entities/follow';
-import { FollowsRepository } from '@/app/repositories/follows-repository';
+import { Follow } from '@/domain/app/entities/follow';
+import { FollowsRepository } from '@/domain/app/repositories/follows-repository';
 
 export class InMemoryFollowsRepository implements FollowsRepository {
   follows: Follow[] = [];

@@ -1,5 +1,5 @@
 import { AppModule } from '@/app.module';
-import { User } from '@/app/entities/user';
+import { User } from '@/domain/app/entities/user';
 import { PrismaUserMapper } from '@/infra/database/prisma/mappers/prisma-user-mapper';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { INestApplication } from '@nestjs/common';

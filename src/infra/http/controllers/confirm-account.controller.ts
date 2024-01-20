@@ -11,7 +11,7 @@ import {
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Public } from '@/infra/auth/public';
 import { ConfirmAccountParams } from './dtos/confirm-account-params';
-import { ConfirmAccountUseCase } from '@/app/use-cases/user/confirm-account';
+import { ConfirmAccountUseCase } from '@/domain/app/use-cases/user/confirm-account';
 import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
 
 @Controller('/accounts/confirm')

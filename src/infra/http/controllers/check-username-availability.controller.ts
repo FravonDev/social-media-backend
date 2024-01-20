@@ -1,18 +1,14 @@
-import { CheckUsernameAvailabilityUseCase } from '@/app/use-cases/user/check-username-availability';
-import {  Public } from '@/infra/auth/public';
-import {
-    Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
+import { Public } from '@/infra/auth/public';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CheckUsernameAvailabilityBody } from './dtos/check-username-availability-body';
+import { CheckUsernameAvailabilityUseCase } from '@/domain/app/use-cases/user/check-username-availability';
 
 @Controller('/accounts/username/availability')
 export class CheckUsernameAvailabilityController {
-  constructor(private readonly checkUsernameAvailabilityUseCase: CheckUsernameAvailabilityUseCase) {}
+  constructor(
+    private readonly checkUsernameAvailabilityUseCase: CheckUsernameAvailabilityUseCase,
+  ) {}
 
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'OK' })
@@ -25,7 +21,7 @@ export class CheckUsernameAvailabilityController {
     const { username } = body;
 
     const result = await this.checkUsernameAvailabilityUseCase.execute({
-        username
+      username,
     });
 
     const IsAvailable = result.value;

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Either, left, right } from '@/core/either';
-import { User } from '@/app/entities/user';
+import { User } from '@/domain/app/entities/user';
 import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
-import { UsersRepository } from '@/app/repositories/users-repository';
+import { UsersRepository } from '@/domain/app/repositories/users-repository';
 
 export interface ConfirmUseCaseRequest {
   token: string;

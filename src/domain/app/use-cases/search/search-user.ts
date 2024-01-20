@@ -1,5 +1,5 @@
-import { User, UserSummary } from '@/app/entities/user';
-import { UsersRepository } from '@/app/repositories/users-repository';
+import { User, UserSummary } from '@/domain/app/entities/user';
+import { UsersRepository } from '@/domain/app/repositories/users-repository';
 import { Either, right } from '@/core/either';
 import { Injectable } from '@nestjs/common';
 

@@ -1,6 +1,6 @@
 import { Follow as PrismaFollow, Prisma } from '@prisma/client';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
-import { Follow } from '@/app/entities/follow';
+import { Follow } from '@/domain/app/entities/follow';
 
 export class PrismaFollowMapper {
   static toDomain(raw: PrismaFollow): Follow {

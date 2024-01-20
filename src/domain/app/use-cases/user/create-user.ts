@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Either, left, right } from '@/core/either';
 import { UsernameAlreadyExistsError } from './errors/username-already-exists';
-import { User } from '@/app/entities/user';
-import { UsersRepository } from '@/app/repositories/users-repository';
+import { User } from '@/domain/app/entities/user';
+import { UsersRepository } from '@/domain/app/repositories/users-repository';
 import { EmailAlreadyExistsError } from './errors/email-already-exists';
-import { HashGenerator } from '@/app/cryptography/hash-generator';
+import { HashGenerator } from '@/domain/app/cryptography/hash-generator';
 import { MailService } from '@/infra/mail/mail.service';
 import { EnvService } from '@/infra/env/env.service';
 

@@ -4,7 +4,7 @@ import { FakeHasher } from '@test/cryptography/fake-hasher';
 import { FakeMailService } from '@test/services/fake-mail.service';
 import { GetCurrentUserProfileUseCase } from './get-current-user-profile';
 import { makeUser } from '@test/factories/make-user';
-import { UserSummary } from '@/app/entities/user';
+import { UserSummary } from '@/domain/app/entities/user';
 import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
