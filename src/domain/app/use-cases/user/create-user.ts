@@ -68,19 +68,6 @@ export class CreateUserUseCase {
 
     await this.UsersRepository.create(user);
 
-    const token = user.token;
-
-    await this.mailService.sendMail({
-      to: email,
-      subject: 'Social Media - Confirm your email',
-      template: 'user-created',
-      context: {
-        name,
-        username,
-        confirmationUrl: `${process.env.BASE_URL}/accounts/confirm?token=${token}`,
-      },
-    });
-
     return right({
       user,
     });
