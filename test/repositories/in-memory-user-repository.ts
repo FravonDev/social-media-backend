@@ -55,36 +55,6 @@ export class InMemoryUsersRepository implements UsersRepository {
     return usersSummary;
   }
 
-  async findConfirmedById(id: string): Promise<User | null> {
-    const user = this.users.find(
-      (item) => item.id.toString() === id && item.emailVerifiedAt !== null,
-    );
-    if (!user) {
-      return null;
-    }
-    return user;
-  }
-
-  async findConfirmedByUsername(username: string): Promise<User | null> {
-    const user = this.users.find(
-      (item) => item.username === username && item.emailVerifiedAt !== null,
-    );
-    if (!user) {
-      return null;
-    }
-    return user;
-  }
-
-  async findConfirmedByEmail(email: string): Promise<User | null> {
-    const user = this.users.find(
-      (item) => item.email === email && item.emailVerifiedAt !== null,
-    );
-    if (!user) {
-      return null;
-    }
-    return user;
-  }
-
   async create(user: User): Promise<void> {
     this.users.push(user);
 

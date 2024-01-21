@@ -103,40 +103,6 @@ export class PrismaUsersRepository implements UsersRepository {
     return PrismaUserMapper.toDomain(user);
   }
 
-  async findConfirmedByUsername(username: string): Promise<User | null> {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        username,
-        emailVerifiedAt: {
-          not: null,
-        },
-      },
-    });
-
-    if (!user) {
-      return null;
-    }
-
-    return PrismaUserMapper.toDomain(user);
-  }
-
-  async findConfirmedByEmail(email: string): Promise<User | null> {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        email,
-        emailVerifiedAt: {
-          not: null,
-        },
-      },
-    });
-
-    if (!user) {
-      return null;
-    }
-
-    return PrismaUserMapper.toDomain(user);
-  }
-
   async create(user: User): Promise<void> {
     const data = PrismaUserMapper.toPrisma(user);
 

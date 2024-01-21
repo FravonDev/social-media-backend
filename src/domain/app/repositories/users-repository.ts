@@ -11,10 +11,6 @@ export abstract class UsersRepository {
     limit: number,
   ): Promise<UserSummary[]>;
 
-  abstract findConfirmedByEmail(email: string): Promise<User | null>;
-  abstract findConfirmedByUsername(username: string): Promise<User | null>;
-  abstract findConfirmedById(id: string): Promise<User | null>;
-
   abstract create(user: User): Promise<void>;
   abstract save(user: User): Promise<void>;
 }
