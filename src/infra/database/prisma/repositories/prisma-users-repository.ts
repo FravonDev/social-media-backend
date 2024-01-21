@@ -4,6 +4,7 @@ import { PrismaUserMapper } from '../mappers/prisma-user-mapper';
 import { UsersRepository } from '@/domain/app/repositories/users-repository';
 import { User } from '@/domain/app/entities/user';
 import { User as PrismaUser, Prisma } from '@prisma/client';
+import { DomainEvents } from '@/core/events/domain-events';
 
 @Injectable()
 export class PrismaUsersRepository implements UsersRepository {
@@ -142,6 +143,8 @@ export class PrismaUsersRepository implements UsersRepository {
     await this.prisma.user.create({
       data,
     });
+
+    DomainEvents.dispatchEventsForAggregate(user.id);
   }
 
   async save(user: User): Promise<void> {
@@ -153,5 +156,7 @@ export class PrismaUsersRepository implements UsersRepository {
       },
       data,
     });
+
+    DomainEvents.dispatchEventsForAggregate(user.id);
   }
 }

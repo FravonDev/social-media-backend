@@ -45,8 +45,6 @@ export class UnfollowUserUseCase {
     }
 
     const result = await this.followsRepository.delete(alreadyFollows);
-    console.log(result);
-    console.log(typeof result);
     return right(result);
   }
 }

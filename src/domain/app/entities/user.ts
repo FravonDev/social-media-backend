@@ -98,9 +98,12 @@ export class User extends AggregateRoot<UserProps> {
       props.token = new UniqueEntityID().toString();
     }
     const user = new User(props, id);
-    const isNewUser = !!id;
+    const isNewUser = !id;
+    console.log('created method');
     if (isNewUser) {
       user.addDomainEvent(new UserCreatedEvent(user));
+      console.log(user.domainEvents);
+      console.log('created method 2');
     }
     return user;
   }

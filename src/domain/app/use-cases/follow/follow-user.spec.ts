@@ -88,7 +88,6 @@ describe('Follow User', () => {
         followerId: johnnyresult.id.toString(),
         username: sarahresult.username,
       });
-      console.log(result2);
       expect(result2.isLeft()).toBeTruthy();
       expect(result2.value).toBeInstanceOf(AlreadyFollowUserError);
     } else {
