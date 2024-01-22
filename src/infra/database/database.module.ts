@@ -4,6 +4,8 @@ import { PrismaUsersRepository } from './prisma/repositories/prisma-users-reposi
 import { UsersRepository } from '@/domain/app/repositories/users-repository';
 import { FollowsRepository } from '@/domain/app/repositories/follows-repository';
 import { PrismaFollowsRepository } from './prisma/repositories/prisma-follows-repository';
+import { ConfirmationRepository } from '@/domain/app/repositories/confirmation-repository';
+import { PrismaConfirmationRepository } from './prisma/repositories/prisma-confirmation-repository';
 
 @Module({
   providers: [
@@ -16,7 +18,16 @@ import { PrismaFollowsRepository } from './prisma/repositories/prisma-follows-re
       provide: FollowsRepository,
       useClass: PrismaFollowsRepository,
     },
+    {
+      provide: ConfirmationRepository,
+      useClass: PrismaConfirmationRepository,
+    },
   ],
-  exports: [PrismaService, UsersRepository, FollowsRepository],
+  exports: [
+    PrismaService,
+    UsersRepository,
+    FollowsRepository,
+    ConfirmationRepository,
+  ],
 })
 export class DatabaseModule {}

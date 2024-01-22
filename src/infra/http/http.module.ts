@@ -21,6 +21,8 @@ import { CheckUsernameAvailabilityUseCase } from '@/domain/app/use-cases/user/ch
 import { CheckUsernameAvailabilityController } from './controllers/check-username-availability.controller';
 import { GetCurrentUserProfileController } from './controllers/get-current-user-profile.controller';
 import { GetCurrentUserProfileUseCase } from '@/domain/app/use-cases/user/get-current-user-profile';
+import { ConfirmUserEmailController } from './controllers/confirm-user-email.controller';
+import { ConfirmUserEmailUseCase } from '@/domain/app/use-cases/user/confirm-user-email';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, MailModule],
@@ -33,6 +35,7 @@ import { GetCurrentUserProfileUseCase } from '@/domain/app/use-cases/user/get-cu
     SearchUsersController,
     CheckUsernameAvailabilityController,
     GetCurrentUserProfileController,
+    ConfirmUserEmailController,
   ],
   providers: [
     /*
@@ -47,6 +50,7 @@ import { GetCurrentUserProfileUseCase } from '@/domain/app/use-cases/user/get-cu
     SearchUsersUseCase,
     CheckUsernameAvailabilityUseCase,
     GetCurrentUserProfileUseCase,
+    ConfirmUserEmailUseCase,
   ],
 })
 export class HttpModule {}
