@@ -14,14 +14,14 @@ import { UserPayload } from '@/infra/auth/jwt.strategy';
 import { CurrentUser } from '@/infra/auth/current-user-decorator';
 import { AlreadyFollowUserError } from '@/domain/app/use-cases/follow/errors/already-follow';
 import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
-import { ConfirmUserEmailUseCase } from '@/domain/app/use-cases/user/confirm-user-email';
+import { SendUserEmailConfirmationUseCase } from '@/domain/app/use-cases/user/send-user-email-confirmation';
 import { SendEmailConfirmationBody } from './dtos/send-email-confirmation-body';
 import { Public } from '@/infra/auth/public';
 import { EmailAlreadyExistsError } from '@/domain/app/use-cases/user/errors/email-already-exists';
 
 @Controller('confirm-email')
 export class ConfirmUserEmailController {
-  constructor(private sendEmail: ConfirmUserEmailUseCase) {}
+  constructor(private sendEmail: SendUserEmailConfirmationUseCase) {}
 
   @Post()
   @Public()

@@ -22,7 +22,7 @@ import { CheckUsernameAvailabilityController } from './controllers/check-usernam
 import { GetCurrentUserProfileController } from './controllers/get-current-user-profile.controller';
 import { GetCurrentUserProfileUseCase } from '@/domain/app/use-cases/user/get-current-user-profile';
 import { ConfirmUserEmailController } from './controllers/confirm-user-email.controller';
-import { ConfirmUserEmailUseCase } from '@/domain/app/use-cases/user/confirm-user-email';
+import { SendUserEmailConfirmationUseCase } from '@/domain/app/use-cases/user/send-user-email-confirmation';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, MailModule],
@@ -50,7 +50,7 @@ import { ConfirmUserEmailUseCase } from '@/domain/app/use-cases/user/confirm-use
     SearchUsersUseCase,
     CheckUsernameAvailabilityUseCase,
     GetCurrentUserProfileUseCase,
-    ConfirmUserEmailUseCase,
+    SendUserEmailConfirmationUseCase,
   ],
 })
 export class HttpModule {}

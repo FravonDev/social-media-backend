@@ -9,11 +9,11 @@ import { HashGenerator } from '../../cryptography/hash-generator';
 import { Confirmation } from '../../entities/confirmation';
 import { ConfirmationRepository } from '../../repositories/confirmation-repository';
 
-interface ConfirmUserEmailUseCaseRequest {
+interface SendUserEmailConfirmationUseCaseRequest {
   email: any;
 }
 
-type ConfirmUserEmailUseCaseResponse = Either<
+type SendUserEmailConfirmationUseCaseResponse = Either<
   UserNotFoundError,
   {
     sent: boolean;
@@ -21,7 +21,7 @@ type ConfirmUserEmailUseCaseResponse = Either<
 >;
 
 @Injectable()
-export class ConfirmUserEmailUseCase {
+export class SendUserEmailConfirmationUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private emailService: MailService,
@@ -31,7 +31,7 @@ export class ConfirmUserEmailUseCase {
 
   async execute({
     email,
-  }: ConfirmUserEmailUseCaseRequest): Promise<ConfirmUserEmailUseCaseResponse> {
+  }: SendUserEmailConfirmationUseCaseRequest): Promise<SendUserEmailConfirmationUseCaseResponse> {
     const user = await this.usersRepository.findByEmail(email);
 
     if (user) {

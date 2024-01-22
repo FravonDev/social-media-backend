@@ -4,7 +4,7 @@ import { FakeHasher } from '@test/cryptography/fake-hasher';
 import { FakeMailService } from '@test/services/fake-mail.service';
 import { makeUser } from '@test/factories/make-user';
 import { ConfirmAccountUseCase } from './confirm-account';
-import { ConfirmUserEmailUseCase } from './confirm-user-email';
+import { SendUserEmailConfirmationUseCase } from './send-user-email-confirmation';
 import { InMemoryConfirmationRepository } from '@test/repositories/in-memory-confirmation-repository';
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
@@ -12,7 +12,7 @@ let inMemoryConfirmationRepository: InMemoryConfirmationRepository;
 let fakeHasher: FakeHasher;
 let createUserUseCase: CreateUserUseCase;
 let mailService: FakeMailService;
-let confirmEmailUseCase: ConfirmUserEmailUseCase;
+let confirmEmailUseCase: SendUserEmailConfirmationUseCase;
 
 describe('Send user email', () => {
   beforeEach(() => {
@@ -26,7 +26,7 @@ describe('Send user email', () => {
       fakeHasher,
       mailService,
     );
-    confirmEmailUseCase = new ConfirmUserEmailUseCase(
+    confirmEmailUseCase = new SendUserEmailConfirmationUseCase(
       inMemoryUsersRepository,
       mailService,
       fakeHasher,
@@ -40,8 +40,6 @@ describe('Send user email', () => {
       password: await fakeHasher.hash('12345678'),
     });
 
-    inMemoryUsersRepository.users.push(user);
-
     const result = await confirmEmailUseCase.execute({ email: user.email });
     expect(result.isRight()).toBeTruthy();
   });
@@ -52,6 +50,7 @@ describe('Send user email', () => {
     });
     inMemoryUsersRepository.users.push(user);
     const result = await confirmEmailUseCase.execute({ email: user.email });
+    console.log(result);
     expect(result.isLeft()).toBeTruthy();
   });
 });
