@@ -1,9 +1,21 @@
 import { Confirmation } from '@/domain/app/entities/confirmation';
-import { Follow } from '@/domain/app/entities/follow';
 import { ConfirmationRepository } from '@/domain/app/repositories/confirmation-repository';
 
 export class InMemoryConfirmationRepository implements ConfirmationRepository {
   confirmations: Confirmation[] = [];
+
+  findByEmailAndCode(
+    email: string,
+    code: string,
+  ): Promise<Confirmation | null> {
+    const confirmation = this.confirmations.find(
+      (item) => item.email === email && item.code === code,
+    );
+    if (!confirmation) {
+      return Promise.resolve(null);
+    }
+    return Promise.resolve(confirmation);
+  }
 
   async save(confirmation: Confirmation): Promise<void> {
     const index = this.confirmations.findIndex(

@@ -22,7 +22,7 @@ export class CheckUsernameAvailabilityUseCase {
     username,
   }: CheckUsernameAvailabilityUseCaseRequest): Promise<CheckUsernameAvailabilityUseCaseResponse> {
     const IsAvailable = !(await this.usersRepository.findByUsername(username));
-    console.log('usernameIsAvaliable', IsAvailable);
+    // console.log('usernameIsAvaliable', IsAvailable);
 
     return right({
       IsAvailable,

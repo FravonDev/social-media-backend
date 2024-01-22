@@ -65,7 +65,7 @@ export class CreateUserUseCase {
       createdAt: new Date(),
       emailVerifiedAt: null,
     });
-    console.log('user-usecase: created ');
+    // console.log('user-usecase: created ');
 
     await this.UsersRepository.create(user);
 
