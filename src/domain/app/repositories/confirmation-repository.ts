@@ -6,5 +6,5 @@ export abstract class ConfirmationRepository {
   abstract findByEmailAndCode(
     email: string,
     code: string,
-  ): Promise<Confirmation | undefined>;
+  ): Promise<Confirmation | null>;
 }

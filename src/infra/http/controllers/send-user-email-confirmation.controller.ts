@@ -7,26 +7,25 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { SendUserEmailConfirmationUseCase } from '@/domain/app/use-cases/user/send-user-email-confirmation';
+import { SendEmailConfirmationBody } from './dtos/send-email-confirmation-body';
 import { Public } from '@/infra/auth/public';
 import { EmailAlreadyExistsError } from '@/domain/app/use-cases/user/errors/email-already-exists';
-import { ConfirmUserEmailUseCase } from '@/domain/app/use-cases/user/confirm-user-email';
-import { ConfirmUserEmailBody } from './dtos/confirm-user-email-body';
 
-@Controller('confirm-email')
-export class ConfirmUserEmailController {
-  constructor(private confirmEmail: ConfirmUserEmailUseCase) {}
+@Controller('send-email-confirmation')
+export class SendUserEmailConfirmationController {
+  constructor(private sendEmail: SendUserEmailConfirmationUseCase) {}
 
   @Post()
   @Public()
   @HttpCode(201)
-  @ApiResponse({ status: 201, description: 'Sended' })
+  @ApiResponse({ status: 201, description: 'Sent' })
   @ApiOperation({ summary: 'Send confirmation code to email' })
-  async handle(@Body() body: ConfirmUserEmailBody) {
-    const { email, code } = body;
+  async handle(@Body() body: SendEmailConfirmationBody) {
+    const { email } = body;
 
-    const result = await this.confirmEmail.execute({
+    const result = await this.sendEmail.execute({
       email,
-      code,
     });
 
     if (result.isLeft()) {
