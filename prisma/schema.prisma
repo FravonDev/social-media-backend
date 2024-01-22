@@ -44,7 +44,7 @@ model Follow {
 model ConfirmationCode {
   id          String    @id @default(uuid())
   email       String
-  code        Int
+  code        String
   expiresAt   DateTime
   createdAt   DateTime  @default(now())
   ConfirmedAt DateTime?
