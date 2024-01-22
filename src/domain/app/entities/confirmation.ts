@@ -34,6 +34,10 @@ export class Confirmation extends Entity<ConfirmationProps> {
     this.props.ConfirmedAt = new Date();
   }
 
+  isExpired(): boolean {
+    return this.props.expiresAt.getTime() < Date.now();
+  }
+
   public static create(
     props: ConfirmationProps,
     id?: UniqueEntityID,

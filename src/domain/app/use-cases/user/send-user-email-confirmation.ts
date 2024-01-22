@@ -10,7 +10,7 @@ import { Confirmation } from '../../entities/confirmation';
 import { ConfirmationRepository } from '../../repositories/confirmation-repository';
 
 interface SendUserEmailConfirmationUseCaseRequest {
-  email: any;
+  email: string;
 }
 
 type SendUserEmailConfirmationUseCaseResponse = Either<
