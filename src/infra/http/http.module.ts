@@ -13,8 +13,6 @@ import { FollowUserController } from './controllers/follow-user.controller';
 import { UnfollowUserController } from './controllers/unfollow-user.controller';
 import { UnfollowUserUseCase } from '@/domain/app/use-cases/follow/unfollow-user';
 import { MailModule } from '../mail/mail.module';
-import { ConfirmAccountController } from './controllers/confirm-account.controller';
-import { ConfirmAccountUseCase } from '@/domain/app/use-cases/user/confirm-account';
 import { SearchUsersController } from './controllers/search-users.controller';
 import { SearchUsersUseCase } from '@/domain/app/use-cases/search/search-user';
 import { CheckUsernameAvailabilityUseCase } from '@/domain/app/use-cases/user/check-username-availability';
@@ -33,7 +31,6 @@ import { SendUserEmailConfirmationController } from './controllers/send-user-ema
     AuthenticateController,
     FollowUserController,
     UnfollowUserController,
-    ConfirmAccountController,
     SearchUsersController,
     CheckUsernameAvailabilityController,
     GetCurrentUserProfileController,
@@ -49,7 +46,6 @@ import { SendUserEmailConfirmationController } from './controllers/send-user-ema
     AuthenticateUserUseCase,
     FollowUserUseCase,
     UnfollowUserUseCase,
-    ConfirmAccountUseCase,
     SearchUsersUseCase,
     CheckUsernameAvailabilityUseCase,
     GetCurrentUserProfileUseCase,

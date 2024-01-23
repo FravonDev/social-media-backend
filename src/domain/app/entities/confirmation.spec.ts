@@ -30,4 +30,17 @@ describe('Confirmation Entity', () => {
 
     expect(confirmation.ConfirmedAt).toBeInstanceOf(Date);
   });
+
+  it('should check if confirmation is expired', () => {
+    const confirmation = Confirmation.create(initialConfirmationData);
+
+    expect(confirmation.isExpired()).toBeFalsy();
+
+    const expiredConfirmation = Confirmation.create({
+      ...initialConfirmationData,
+      expiresAt: new Date(Date.now() - expirationInMiliseconds),
+    });
+
+    expect(expiredConfirmation.isExpired()).toBeTruthy();
+  });
 });
