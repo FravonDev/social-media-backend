@@ -19,4 +19,16 @@ export class MailerTrapService implements MailService {
     };
     await this.mailerService.sendMail(mailOptions);
   }
+
+  async sendConfirmationEmail(email: string, code: string): Promise<void> {
+    const mailOptions = {
+      to: email,
+      subject: 'Your code - account confirmation',
+      context: {
+        code,
+      },
+      template: './confirmation',
+    };
+    await this.mailerService.sendMail(mailOptions);
+  }
 }

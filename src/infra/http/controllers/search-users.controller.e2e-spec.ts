@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { hash } from 'bcrypt';
 import request from 'supertest';
-import { User, UserSummary } from '@/app/entities/user';
+import { User, UserSummary } from '@/domain/app/entities/user';
 
 describe('Search users (E2E)', () => {
   let app: INestApplication;

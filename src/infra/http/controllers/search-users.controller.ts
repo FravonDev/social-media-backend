@@ -1,4 +1,4 @@
-import { SearchUsersUseCase } from '@/app/use-cases/search/search-user';
+import { SearchUsersUseCase } from '@/domain/app/use-cases/search/search-user';
 import {
   Controller,
   Get,

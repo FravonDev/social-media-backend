@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { User, UserProps } from '@/app/entities/user';
+import { User, UserProps } from '@/domain/app/entities/user';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 
 export function makeUser(

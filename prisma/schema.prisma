@@ -40,3 +40,12 @@ model Follow {
   followedId String
   createdAt  DateTime
 }
+
+model ConfirmationCode {
+  id          String    @id @default(uuid())
+  email       String
+  code        String
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+  ConfirmedAt DateTime?
+}

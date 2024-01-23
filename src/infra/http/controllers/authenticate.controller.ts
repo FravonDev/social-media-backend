@@ -5,9 +5,9 @@ import {
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AuthenticateUserUseCase } from '@/app/use-cases/auth/authenticate-user';
+import { AuthenticateUserUseCase } from '@/domain/app/use-cases/auth/authenticate-user';
 import { AuthenticateUserBody } from './dtos/authenticate-user-body';
-import { WrongCredentialsError } from '@/app/use-cases/auth/errors/wrong-credentials-error';
+import { WrongCredentialsError } from '@/domain/app/use-cases/auth/errors/wrong-credentials-error';
 import { Public } from '@/infra/auth/public';
 
 @Controller('accounts/login')

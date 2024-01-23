@@ -11,8 +11,8 @@ import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserPayload } from '@/infra/auth/jwt.strategy';
 import { CurrentUser } from '@/infra/auth/current-user-decorator';
 import { UnfollowUserBody } from './dtos/unfollow-body';
-import { UnfollowUserUseCase } from '@/app/use-cases/follow/unfollow-user';
-import { NotFollowUserError } from '@/app/use-cases/follow/errors/not-following';
+import { UnfollowUserUseCase } from '@/domain/app/use-cases/follow/unfollow-user';
+import { NotFollowUserError } from '@/domain/app/use-cases/follow/errors/not-following';
 import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
 
 @Controller('unfollow')

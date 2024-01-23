@@ -8,11 +8,11 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { FollowUserUseCase } from '@/app/use-cases/follow/follow-user';
+import { FollowUserUseCase } from '@/domain/app/use-cases/follow/follow-user';
 import { FollowUserBody } from './dtos/follow-body';
 import { UserPayload } from '@/infra/auth/jwt.strategy';
 import { CurrentUser } from '@/infra/auth/current-user-decorator';
-import { AlreadyFollowUserError } from '@/app/use-cases/follow/errors/already-follow';
+import { AlreadyFollowUserError } from '@/domain/app/use-cases/follow/errors/already-follow';
 import { UserNotFoundError } from '@/core/errors/shared/user-not-found';
 
 @Controller('follow')
