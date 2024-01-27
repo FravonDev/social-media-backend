@@ -44,7 +44,7 @@ export class ConfirmUserEmailUseCase {
       return left(new CodeExpiredError());
     }
 
-    if (confirmationCodeExists.ConfirmedAt) {
+    if (confirmationCodeExists.confirmedAt) {
       return right({
         confirmed: true,
       });

@@ -6,7 +6,7 @@ export interface ConfirmationProps {
   code: string;
   expiresAt: Date;
   createdAt: Date;
-  ConfirmedAt?: Date;
+  confirmedAt?: Date;
 }
 
 export class Confirmation extends Entity<ConfirmationProps> {
@@ -26,12 +26,12 @@ export class Confirmation extends Entity<ConfirmationProps> {
     return this.props.createdAt;
   }
 
-  get ConfirmedAt(): Date | undefined {
-    return this.props.ConfirmedAt;
+  get confirmedAt(): Date | undefined {
+    return this.props.confirmedAt;
   }
 
   confirm(): void {
-    this.props.ConfirmedAt = new Date();
+    this.props.confirmedAt = new Date();
   }
 
   isExpired(): boolean {

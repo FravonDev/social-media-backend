@@ -14,7 +14,7 @@ export class PrismaConfirmationMapper {
         code: raw.code,
         expiresAt: raw.expiresAt,
         createdAt: raw.createdAt,
-        ConfirmedAt: raw.ConfirmedAt || undefined,
+        confirmedAt: raw.confirmedAt || undefined,
       },
       new UniqueEntityID(raw.id),
     );
@@ -29,7 +29,7 @@ export class PrismaConfirmationMapper {
       code: follow.code,
       expiresAt: follow.expiresAt,
       createdAt: follow.createdAt,
-      ConfirmedAt: follow.ConfirmedAt || undefined,
+      confirmedAt: follow.confirmedAt || undefined,
     };
   }
 }

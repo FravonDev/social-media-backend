@@ -34,7 +34,7 @@ describe('Send user email confirmation (E2E)', async () => {
     await prisma.confirmationCode.create({
       data: {
         ...data,
-        ConfirmedAt: null,
+        confirmedAt: null,
       },
     });
 
@@ -54,7 +54,7 @@ describe('Send user email confirmation (E2E)', async () => {
     });
 
     expect(confirmationCodeOnDatabase).toBeTruthy();
-    expect(confirmationCodeOnDatabase!.ConfirmedAt).toBeInstanceOf(Date);
+    expect(confirmationCodeOnDatabase!.confirmedAt).toBeInstanceOf(Date);
   });
 
   test('[POST] /confirm-email should not confirm with expired token', async () => {
@@ -87,7 +87,7 @@ describe('Send user email confirmation (E2E)', async () => {
     });
 
     expect(confirmationCodeOnDatabase).toBeTruthy();
-    expect(confirmationCodeOnDatabase!.ConfirmedAt).toBeNull();
+    expect(confirmationCodeOnDatabase!.confirmedAt).toBeNull();
   });
 
   test('[POST] /confirm-email sound not confirm with invalid code', async () => {

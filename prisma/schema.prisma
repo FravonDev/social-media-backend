@@ -47,5 +47,5 @@ model ConfirmationCode {
   code        String
   expiresAt   DateTime
   createdAt   DateTime  @default(now())
-  ConfirmedAt DateTime?
+  confirmedAt DateTime?
 }

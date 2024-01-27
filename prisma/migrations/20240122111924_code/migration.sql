@@ -7,6 +7,6 @@
 */
 -- AlterTable
 ALTER TABLE "ConfirmationCode" DROP COLUMN "exoiresAt",
-ADD COLUMN     "ConfirmedAt" TIMESTAMP(3),
+ADD COLUMN     "confirmedAt" TIMESTAMP(3),
 ADD COLUMN     "expiresAt" TIMESTAMP(3) NOT NULL,
 ALTER COLUMN "code" SET DATA TYPE TEXT;

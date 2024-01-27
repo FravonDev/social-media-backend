@@ -53,7 +53,7 @@ describe('User Entity', () => {
     expect(user.deletedAt).toBeInstanceOf(Date);
   });
 
-  it('should set emailConfirmedAt', () => {
+  it('should set emailconfirmedAt', () => {
     const user = User.create(initialUserData);
 
     user.confirmAccount();

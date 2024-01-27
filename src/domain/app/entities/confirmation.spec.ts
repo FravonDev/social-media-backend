@@ -20,7 +20,7 @@ describe('Confirmation Entity', () => {
     expect(confirmation.code).toEqual(initialConfirmationData.code);
     expect(confirmation.email).toEqual(initialConfirmationData.email);
     expect(confirmation.expiresAt).toEqual(initialConfirmationData.expiresAt);
-    expect(confirmation.ConfirmedAt).toBeUndefined();
+    expect(confirmation.confirmedAt).toBeUndefined();
   });
 
   it('should confirm a confirmation', () => {
@@ -28,7 +28,7 @@ describe('Confirmation Entity', () => {
 
     confirmation.confirm();
 
-    expect(confirmation.ConfirmedAt).toBeInstanceOf(Date);
+    expect(confirmation.confirmedAt).toBeInstanceOf(Date);
   });
 
   it('should check if confirmation is expired', () => {
