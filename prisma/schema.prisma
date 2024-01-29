@@ -30,6 +30,7 @@ model User {
 
   following  Follow[] @relation("Following")
   followedBy Follow[] @relation("FollowedBy")
+  Post       Post[]
 }
 
 model Follow {
@@ -48,4 +49,14 @@ model ConfirmationCode {
   expiresAt   DateTime
   createdAt   DateTime  @default(now())
   confirmedAt DateTime?
+}
+
+model Post {
+  id        String    @id @default(uuid())
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  authorId  String
+  text      String?
+  images    String[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
 }
